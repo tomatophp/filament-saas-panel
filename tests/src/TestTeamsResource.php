@@ -1,13 +1,13 @@
 <?php
 
-
-use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
+use TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource;
+use TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource\Pages;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
-use TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource;
-use TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource\Pages;
 
 beforeEach(function () {
     actingAs(User::factory()->create(), 'web');

@@ -16,7 +16,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use TomatoPHP\FilamentAccounts\FilamentAccountsPlugin;
-use TomatoPHP\FilamentSaasPanel\FilamentSaasPanelPlugin;
 use TomatoPHP\FilamentSaasPanel\FilamentSaasTeamsPlugin;
 
 class AdminPanelProvider extends PanelProvider

@@ -78,7 +78,6 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
         return $this->belongsToMany(Account::class, 'team_user', 'team_id', 'account_id');
     }
 
-
     protected static function newFactory(): TeamFactory
     {
         return TeamFactory::new();
