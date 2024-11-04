@@ -1,6 +1,6 @@
-![Screenshot](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/art/screenshot.jpg)
+![Screenshot](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/3x1io-tomato-saas-panel.jpg)
 
-# Filament saas panel
+# Filament SaaS Panel
 
 [![Latest Stable Version](https://poser.pugx.org/tomatophp/filament-saas-panel/version.svg)](https://packagist.org/packages/tomatophp/filament-saas-panel)
 [![License](https://poser.pugx.org/tomatophp/filament-saas-panel/license.svg)](https://packagist.org/packages/tomatophp/filament-saas-panel)
@@ -8,22 +8,93 @@
 
 Ready to use SaaS panel with integration of Filament Accounts Builder and JetStream teams
 
+## Screenshot Teams
+
+![Team List](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-list.png)
+![Create Team](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/create-team.png)
+![Edit Team](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/edit-team.png)
+
+## Screenshot Account Team Components
+
+![Account Team Form Component](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-form.png)
+![Account Team Table Column](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-table.png)
+![Account Team Table Action](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-action.png)
+
+
+## Screenshots Auth Process
+
+![Login](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/login.png)
+![OTP Screen](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/otp.png)
+![Register](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/register.png)
+![Create Tenant](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/create-tenant.png)
+
+## Screenshot Panel
+
+![Panel](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/panel.png)
+![Panel Tenant Menu](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/panel-tenant-menu.png)
+
+## Screenshot Edit Teams
+
+![Team Invite](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-invite.png)
+![Team Members](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-members.png)
+![Team Settings](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-settings.png)
+![Team Settings Not Owner](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-settings-not-owner.png)
+
+## Screenshots Edit Profile
+
+![Edit Profile](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/edit-profile.png)
+![Change Password](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/change-password.png)
+![Delete Modal](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/delete-modal.png)
+![Logout Modal](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/logout-modal.png)
+![Session & Delete Account](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/session-delete.png)
+
+## Screenshot API Tokens
+
+![API Tokens](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/api-tokens.png)
+![Create Token](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/create-token.png)
+![Token Modal](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/token-modal.png)
+
 ## Installation
 
 ```bash
 composer require tomatophp/filament-saas-panel
 ```
+
+now you need to publish teams migration
+
+```bash
+php artisan vendor:publish --tag="filament-saas-teams-migrations"
+```
+
 after install your package please run this command
 
 ```bash
 php artisan filament-saas-panel:install
 ```
 
-finally register the plugin on `/app/Providers/Filament/AdminPanelProvider.php`
+now you need to publish teams models and account model with injection of teams
+
+```bash
+php artisan vendor:publish --tag="filament-saas-teams-models"
+php artisan vendor:publish --tag="filament-saas-account-model"
+```
+
+create a new panel for `app`
+
+```bash
+php artisan filament:panel app
+```
+
+finally register the plugin on `/app/Providers/Filament/AppPanelProvider.php`
 
 ```php
 ->plugin(
     \TomatoPHP\FilamentSaasPanel\FilamentSaasPanelPlugin::make()
+        ->editTeam()
+        ->deleteTeam()
+        ->showTeamMembers()
+        ->teamInvitation()
+        ->allowTenants()
         ->checkAccountStatusInLogin()
         ->APITokenManager()
         ->editProfile()
@@ -32,8 +103,58 @@ finally register the plugin on `/app/Providers/Filament/AdminPanelProvider.php`
         ->deleteAccount()
         ->editProfileMenu()
         ->registration()
-        ->useOTPActivation(),
+        ->useOTPActivation()
 )
+```
+
+on your admin panel provider if you like to have Team resource and features register this 
+
+```php
+->plugin(
+    \TomatoPHP\FilamentSaasPanel\FilamentSaasTeamsPlugin::make()
+        ->allowAccountTeamTableAction()
+        ->allowAccountTeamTableBulkAction()
+        ->allowAccountTeamFilter()
+        ->allowAccountTeamFormComponent()
+        ->allowAccountTeamTableColumn()
+)
+```
+
+## Change Panel ID
+
+if you like to change the panel name on your config just change `id` and `name` on `config/filament-saas-panel.php`
+
+```php
+return [
+    "id" => "user"
+];
+```
+
+you can publish it from this command
+
+```bash
+php artisan vendor:publish --tag="filament-saas-panel-config"
+```
+
+## Custom Pages
+
+you can change any page you want on the panel using the config like this
+
+```php
+'pages' => [
+    'teams' => [
+        'create' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\CreateTeam::class,
+        'edit' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam::class,
+    ],
+    'profile' => [
+        'edit' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::class,
+    ],
+    'auth' => [
+        'login' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\LoginAccount::class,
+        'register' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccount::class,
+        'register-without-otp' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccountWithoutOTP::class,
+    ],
+],
 ```
 
 ## Publish Assets

@@ -71,7 +71,7 @@ class FilamentSaasPanelServiceProvider extends ServiceProvider
             __DIR__.'/../publish/Team.php' => app_path('Models/Team.php'),
             __DIR__.'/../publish/TeamInvitation.php' => app_path('Models/TeamInvitation.php'),
             __DIR__.'/../publish/Membership.php' => app_path('Models/Membership.php'),
-        ], 'filament-saas-teams');
+        ], 'filament-saas-teams-models');
 
         $this->publishes([
             __DIR__.'/../publish/Account.php' => app_path('Models/Account.php'),
