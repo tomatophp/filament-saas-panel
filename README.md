@@ -2,11 +2,39 @@
 
 # Filament SaaS Panel
 
+[![Dependabot Updates](https://github.com/tomatophp/filament-saas-panel/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/tomatophp/filament-saas-panel/actions/workflows/dependabot/dependabot-updates)
+[![PHP Code Styling](https://github.com/tomatophp/filament-saas-panel/actions/workflows/fix-php-code-styling.yml/badge.svg)](https://github.com/tomatophp/filament-saas-panel/actions/workflows/fix-php-code-styling.yml)
+[![Tests](https://github.com/tomatophp/filament-saas-panel/actions/workflows/tests.yml/badge.svg)](https://github.com/tomatophp/filament-saas-panel/actions/workflows/tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/tomatophp/filament-saas-panel/version.svg)](https://packagist.org/packages/tomatophp/filament-saas-panel)
 [![License](https://poser.pugx.org/tomatophp/filament-saas-panel/license.svg)](https://packagist.org/packages/tomatophp/filament-saas-panel)
 [![Downloads](https://poser.pugx.org/tomatophp/filament-saas-panel/d/total.svg)](https://packagist.org/packages/tomatophp/filament-saas-panel)
 
 Ready to use SaaS panel with integration of Filament Accounts Builder and JetStream teams
+
+## Features
+
+- [x] Login Page
+- [x] Register with OTP
+- [x] Login Check if Account Active or Blocked
+- [x] Create Team Page
+- [x] Edit Team Page
+- [x] Team Members List
+- [x] Team Invitation
+- [x] Delete Team
+- [x] Edit Profile
+- [x] Change Profile Password
+- [x] Browser Session Manager
+- [x] Delete Account
+- [x] API Tokens
+- [x] Team Resource
+- [x] Teams Account Table Column
+- [x] Teams Account Table Action
+- [x] Teams Account Table Bulk Action
+- [x] Teams Account Table Filter
+- [x] Teams Account Form Component
+- [ ] Integration With Filament Social Login
+- [ ] Integration With Filament Two Factory Authentication
+- [ ] Integration With Wave Themes/Plugins
 
 ## Screenshot Teams
 
