@@ -1,0 +1,29 @@
+{
+    "name": "FilamentSaasPanel",
+    "alias": "filament-saas-panel",
+    "description": {
+        "ar": "Ready to use SaaS panel with integration of Filament Accounts Builder and Jetsteam teams",
+        "en": "Ready to use SaaS panel with integration of Filament Accounts Builder and Jetsteam teams",
+        "gr": "Ready to use SaaS panel with integration of Filament Accounts Builder and Jetsteam teams",
+        "sp": "Ready to use SaaS panel with integration of Filament Accounts Builder and Jetsteam teams"
+    },
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "TomatoPHP\\FilamentSaasPanel\\FilamentSaasPanelServiceProvider"
+    ],
+    "files": [],
+    "title": {
+        "ar": "Filament saas panel",
+        "en": "Filament saas panel",
+        "gr": "Filament saas panel",
+        "sp": "Filament saas panel"
+    },
+    "color": "#cc1448",
+    "icon": "heroicon-c-users",
+    "placeholder": "https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/art/screenshot.jpg",
+    "type": "plugin",
+    "version": "v1.0.0",
+    "github" : "https://github.com/tomatophp/filament-saas-panel",
+    "docs" : "https://github.com/tomatophp/filament-saas-panel"
+}

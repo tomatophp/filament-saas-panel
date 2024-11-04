@@ -1,0 +1,76 @@
+{
+    "name": "tomatophp/filament-saas-panel",
+    "type": "library",
+    "description": "Ready to use SaaS panel with integration of Filament Accounts Builder and JetStream teams",
+    "keywords": [
+        "php",
+        "laravel",
+        "jetsteam",
+        "fortify",
+        "filament-plugin",
+        "panel",
+        "saas",
+        "teams"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TomatoPHP\\FilamentSaasPanel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TomatoPHP\\FilamentSaasPanel\\Tests\\": "tests/src/",
+            "TomatoPHP\\FilamentSaasPanel\\Tests\\Database\\Factories\\": "tests/database/factories"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TomatoPHP\\FilamentSaasPanel\\FilamentSaasPanelServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Fady Mondy",
+            "email": "info@3x1.io"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "testbench": "vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse src tests",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
+    },
+    "require": {
+        "php": "^8.1|^8.2",
+        "tomatophp/console-helpers": "^1.1",
+        "filament/filament": "^3.2",
+        "laravel/jetstream": "^5.3",
+        "tomatophp/filament-accounts": "^2.3",
+        "laravel/sanctum": "^v4.0",
+        "filament/spatie-laravel-media-library-plugin": "^3.2"
+    },
+    "require-dev": {
+       "laravel/pint": "^1.18",
+       "livewire/livewire": "^2.10|^3.0",
+       "nunomaduro/larastan": "^2.9",
+       "orchestra/testbench": "^9.5",
+       "pestphp/pest": "^2.36",
+       "pestphp/pest-plugin-laravel": "^2.4",
+       "pestphp/pest-plugin-livewire": "^2.1",
+       "phpstan/extension-installer": "^1.4",
+       "phpstan/phpstan-deprecation-rules": "^1.2",
+       "phpstan/phpstan-phpunit": "^1.4"
+    },
+    "version": "v1.0.0"
+}
