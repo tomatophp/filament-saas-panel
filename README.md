@@ -10,7 +10,7 @@ Ready to use SaaS panel with integration of Filament Accounts Builder and JetStr
 
 ## Screenshot Teams
 
-![Team List](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-list.png)
+![Team List](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/teams-list.png)
 ![Create Team](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/create-team.png)
 ![Edit Team](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/edit-team.png)
 
@@ -18,7 +18,7 @@ Ready to use SaaS panel with integration of Filament Accounts Builder and JetStr
 
 ![Account Team Form Component](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-form.png)
 ![Account Team Table Column](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-table.png)
-![Account Team Table Action](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/team-action.png)
+![Account Team Table Action](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/teams-action.png)
 
 
 ## Screenshots Auth Process
