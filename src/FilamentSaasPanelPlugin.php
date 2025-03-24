@@ -9,7 +9,6 @@ use Laravel\Jetstream\Jetstream;
 use TomatoPHP\FilamentAccounts\FilamentAccountsPlugin;
 use TomatoPHP\FilamentSaasPanel\Filament\Pages\ApiTokens;
 use TomatoPHP\FilamentSaasPanel\Models\Team;
-use TomatoPHP\FilamentSaasPanel\Tests\Models\Account;
 
 class FilamentSaasPanelPlugin implements Plugin
 {
