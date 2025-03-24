@@ -24,7 +24,7 @@ use Spatie\MediaLibrary\MediaLibraryServiceProvider;
 use TomatoPHP\FilamentAccounts\FilamentAccountsServiceProvider;
 use TomatoPHP\FilamentSaasPanel\FilamentSaasPanelServiceProvider;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\Account;
-use TomatoPHP\FilamentUsers\Tests\Models\User;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
 
 #[WithEnv('DB_CONNECTION', 'testing')]
 abstract class TestCase extends BaseTestCase
