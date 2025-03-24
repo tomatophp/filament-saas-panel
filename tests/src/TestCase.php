@@ -73,7 +73,7 @@ abstract class TestCase extends BaseTestCase
 
         $app['config']->set('view.paths', [
             ...$app['config']->get('view.paths'),
-            __DIR__ . '/../resources/views',
+            __DIR__.'/../resources/views',
         ]);
     }
 }
