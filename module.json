@@ -14,16 +14,16 @@
     ],
     "files": [],
     "title": {
-        "ar": "Filament saas panel",
-        "en": "Filament saas panel",
-        "gr": "Filament saas panel",
-        "sp": "Filament saas panel"
+        "ar": "SaaS Panel",
+        "en": "SaaS Panel",
+        "gr": "SaaS Panel",
+        "sp": "SaaS Panel"
     },
     "color": "#cc1448",
     "icon": "heroicon-c-users",
-    "placeholder": "https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/art/screenshot.jpg",
+    "placeholder": "https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/3x1io-tomato-saas-panel.jpg",
     "type": "plugin",
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "github" : "https://github.com/tomatophp/filament-saas-panel",
     "docs" : "https://github.com/tomatophp/filament-saas-panel"
 }
