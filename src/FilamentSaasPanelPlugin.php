@@ -6,8 +6,10 @@ use Filament\Contracts\Plugin;
 use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Laravel\Jetstream\Jetstream;
+use TomatoPHP\FilamentAccounts\FilamentAccountsPlugin;
 use TomatoPHP\FilamentSaasPanel\Filament\Pages\ApiTokens;
 use TomatoPHP\FilamentSaasPanel\Models\Team;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\Account;
 
 class FilamentSaasPanelPlugin implements Plugin
 {
@@ -165,6 +167,13 @@ class FilamentSaasPanelPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $pages = [];
+
+        $panel->plugin(
+            FilamentAccountsPlugin::make()
+                ->useAvatar()
+                ->canLogin()
+                ->canBlocked()
+        );
 
         if ($this->allowTenants) {
             $panel

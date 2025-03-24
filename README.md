@@ -148,6 +148,14 @@ on your admin panel provider if you like to have Team resource and features regi
 )
 ```
 
+## Use On Existing Account Model
+
+if you have `Account.php` published on your `/app/Models` folder and you don't need to publish it again just add this trait to your model
+
+```php
+use \TomatoPHP\FilamentSaasPanel\Traits\InteractsWithTenant;
+```
+
 ## Change Panel ID
 
 if you like to change the panel name on your config just change `id` and `name` on `config/filament-saas-panel.php`
