@@ -6,7 +6,6 @@ use Filament\Contracts\Plugin;
 use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Laravel\Jetstream\Jetstream;
-use TomatoPHP\FilamentAccounts\FilamentAccountsPlugin;
 use TomatoPHP\FilamentSaasPanel\Filament\Pages\ApiTokens;
 use TomatoPHP\FilamentSaasPanel\Models\Team;
 
