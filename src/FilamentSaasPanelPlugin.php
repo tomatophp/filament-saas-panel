@@ -167,13 +167,6 @@ class FilamentSaasPanelPlugin implements Plugin
     {
         $pages = [];
 
-        $panel->plugin(
-            FilamentAccountsPlugin::make()
-                ->useAvatar()
-                ->canLogin()
-                ->canBlocked()
-        );
-
         if ($this->allowTenants) {
             $panel
                 ->tenant($this->useJetstreamTeamModel ? Jetstream::teamModel() : Team::class, $this->teamSlug)
