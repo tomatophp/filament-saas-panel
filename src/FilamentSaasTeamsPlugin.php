@@ -10,6 +10,7 @@ use TomatoPHP\FilamentAccounts\Filament\Resources\AccountResource\Table\AccountB
 use TomatoPHP\FilamentAccounts\Filament\Resources\AccountResource\Table\AccountFilters;
 use TomatoPHP\FilamentAccounts\Filament\Resources\AccountResource\Table\AccountTable;
 use TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource;
+use TomatoPHP\FilamentAccounts\FilamentAccountsPlugin;
 
 class FilamentSaasTeamsPlugin implements Plugin
 {
@@ -71,7 +72,14 @@ class FilamentSaasTeamsPlugin implements Plugin
     }
 
     public function boot(Panel $panel): void
-    {
+    {   
+        $panel->plugin(
+            FilamentAccountsPlugin::make()
+                ->useAvatar()
+                ->canLogin()
+                ->canBlocked()
+        );
+     
         if ($this->allowAccountTeamTableAction) {
             AccountActions::register(TeamResource\Actions\TeamTableAction::make());
         }
