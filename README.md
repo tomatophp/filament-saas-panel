@@ -1,4 +1,4 @@
-![Screenshot](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/3x1io-tomato-saas-panel.jpg)
+![Screenshot](https://raw.githubusercontent.com/tomatophp/filament-saas-panel/master/arts/fadymondy-tomato-saas-panel.jpg)
 
 # Filament SaaS Panel
 
@@ -27,11 +27,6 @@ Ready to use SaaS panel with integration of Filament Accounts Builder and JetStr
 - [x] Delete Account
 - [x] API Tokens
 - [x] Team Resource
-- [x] Teams Account Table Column
-- [x] Teams Account Table Action
-- [x] Teams Account Table Bulk Action
-- [x] Teams Account Table Filter
-- [x] Teams Account Form Component
 - [ ] Integration With Filament Social Login
 - [ ] Integration With Filament Two Factory Authentication
 - [ ] Integration With Wave Themes/Plugins
@@ -104,7 +99,6 @@ now you need to publish teams models and account model with injection of teams
 
 ```bash
 php artisan vendor:publish --tag="filament-saas-teams-models"
-php artisan vendor:publish --tag="filament-saas-account-model"
 ```
 
 create a new panel for `app`
@@ -135,25 +129,34 @@ finally register the plugin on `/app/Providers/Filament/AppPanelProvider.php`
 )
 ```
 
-on your admin panel provider if you like to have Team resource and features register this 
+on your admin panel provider if you like to have Team resource and features register this
 
 ```php
 ->plugin(
     \TomatoPHP\FilamentSaasPanel\FilamentSaasTeamsPlugin::make()
-        ->allowAccountTeamTableAction()
-        ->allowAccountTeamTableBulkAction()
-        ->allowAccountTeamFilter()
-        ->allowAccountTeamFormComponent()
-        ->allowAccountTeamTableColumn()
 )
 ```
 
-## Use On Existing Account Model
+## Use On Existing User Model
 
-if you have `Account.php` published on your `/app/Models` folder and you don't need to publish it again just add this trait to your model
+if you have `User.php` published on your `/app/Models` folder and you don't need to publish it again just add this trait to your model
 
 ```php
 use \TomatoPHP\FilamentSaasPanel\Traits\InteractsWithTenant;
+```
+
+and implament this interfaces
+
+```php
+use Filament\Models\Contracts\HasTenants;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
+use Spatie\MediaLibrary\HasMedia;
+
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia, HasTenants
+{
+
+}
 ```
 
 ## Change Panel ID
