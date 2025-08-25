@@ -4,18 +4,18 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    $account = \TomatoPHP\FilamentSaasPanel\Tests\Models\Account::factory()->create();
+    $account = \TomatoPHP\FilamentSaasPanel\Tests\Models\User::factory()->create();
     $team = $account->teams()->create([
-        'account_id' => $account->id,
+        'user_id' => $account->id,
         'name' => 'Team 1',
         'personal_team' => true,
     ]);
     $account->current_team_id = $team->id;
-    actingAs($account, 'accounts');
+    actingAs($account, config('filament-saas-panel.auth_guard'));
 });
 
 it('can render edit profile page', function () {
-    get(\TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::getUrl(['tenant' => auth('accounts')->user()->current_team_id]))->assertOk();
+    get(\TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::getUrl(['tenant' => auth(config('filament-saas-panel.auth_guard'))->user()->current_team_id]))->assertOk();
 });
 
 it('can edit profile details', function () {
@@ -25,8 +25,8 @@ it('can edit profile details', function () {
         ], 'editProfileForm')
         ->call('updateProfile');
 
-    \Pest\Laravel\assertDatabaseHas(\TomatoPHP\FilamentSaasPanel\Tests\Models\Account::class, [
-        'id' => auth('accounts')->user()->id,
+    \Pest\Laravel\assertDatabaseHas(\TomatoPHP\FilamentSaasPanel\Tests\Models\User::class, [
+        'id' => auth(config('filament-saas-panel.auth_guard'))->user()->id,
         'name' => 'John Doe',
     ]);
 });
@@ -40,8 +40,8 @@ it('can edit profile password', function () {
         ], 'editPasswordForm')
         ->call('updatePassword');
 
-    \PHPUnit\Framework\assertTrue(auth('accounts')->attempt([
-        'email' => auth('accounts')->user()->email,
+    \PHPUnit\Framework\assertTrue(auth(config('filament-saas-panel.auth_guard'))->attempt([
+        'email' => auth(config('filament-saas-panel.auth_guard'))->user()->email,
         'password' => 'password123',
     ]));
 });

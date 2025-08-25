@@ -2,7 +2,9 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Forms;
 
+use Filament\Actions\Action;
 use Filament\Forms;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -11,7 +13,7 @@ class EditPasswordForm
     public static function get(): array
     {
         return [
-            Forms\Components\Section::make(trans('filament-saas-panel::messages.profile.password.title'))
+            Section::make(trans('filament-saas-panel::messages.profile.password.title'))
                 ->description(trans('filament-saas-panel::messages.profile.password.description'))
                 ->schema([
                     Forms\Components\TextInput::make('current_password')
@@ -36,6 +38,9 @@ class EditPasswordForm
                         ->required()
                         ->dehydrated(false)
                         ->revealable(),
+                    Action::make('getUpdatePasswordFormActions')
+                        ->label(trans('filament-saas-panel::messages.save'))
+                        ->submit('editPasswordForm'),
                 ]),
         ];
     }

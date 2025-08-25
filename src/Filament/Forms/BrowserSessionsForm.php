@@ -3,10 +3,10 @@
 namespace TomatoPHP\FilamentSaasPanel\Filament\Forms;
 
 use Carbon\Carbon;
+use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Section;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -25,30 +25,28 @@ class BrowserSessionsForm
                         ->hiddenLabel()
                         ->view('filament-saas-panel::forms.components.browser-sessions')
                         ->viewData(['data' => self::getSessions()]),
-                    Actions::make([
-                        Actions\Action::make('deleteBrowserSessions')
-                            ->label(trans('filament-saas-panel::messages.profile.browser.browser_sessions_log_out'))
-                            ->requiresConfirmation()
-                            ->modalHeading(trans('filament-saas-panel::messages.profile.browser.browser_sessions_log_out'))
-                            ->modalDescription(trans('filament-saas-panel::messages.profile.browser.browser_sessions_confirm_pass'))
-                            ->modalSubmitActionLabel(trans('filament-saas-panel::messages.profile.browser.browser_sessions_log_out'))
-                            ->form([
-                                Forms\Components\TextInput::make('password')
-                                    ->password()
-                                    ->revealable()
-                                    ->label(trans('filament-saas-panel::messages.profile.browser.password'))
-                                    ->required(),
-                            ])
-                            ->action(function (array $data) {
-                                self::logoutOtherBrowserSessions($data['password']);
+                    Action::make('deleteBrowserSessions')
+                        ->label(trans('filament-saas-panel::messages.profile.browser.browser_sessions_log_out'))
+                        ->requiresConfirmation()
+                        ->modalHeading(trans('filament-saas-panel::messages.profile.browser.browser_sessions_log_out'))
+                        ->modalDescription(trans('filament-saas-panel::messages.profile.browser.browser_sessions_confirm_pass'))
+                        ->modalSubmitActionLabel(trans('filament-saas-panel::messages.profile.browser.browser_sessions_log_out'))
+                        ->schema([
+                            Forms\Components\TextInput::make('password')
+                                ->password()
+                                ->revealable()
+                                ->label(trans('filament-saas-panel::messages.profile.browser.password'))
+                                ->required(),
+                        ])
+                        ->action(function (array $data) {
+                            self::logoutOtherBrowserSessions($data['password']);
 
-                                Notification::make()
-                                    ->title('Success')
-                                    ->success()
-                                    ->send();
-                            })
-                            ->modalWidth('2xl'),
-                    ]),
+                            Notification::make()
+                                ->title('Success')
+                                ->success()
+                                ->send();
+                        })
+                        ->modalWidth('2xl'),
 
                 ]),
         ];

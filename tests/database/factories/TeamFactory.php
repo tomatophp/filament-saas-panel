@@ -3,7 +3,7 @@
 namespace TomatoPHP\FilamentSaasPanel\Tests\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use TomatoPHP\FilamentSaasPanel\Tests\Models\Account;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
 
 class TeamFactory extends Factory
@@ -12,12 +12,12 @@ class TeamFactory extends Factory
 
     public function definition(): array
     {
-        $account = Account::factory()->create();
+        $user = User::factory()->create();
 
         return [
             'name' => $this->faker->name(),
             'personal_team' => false,
-            'account_id' => $account->id,
+            'user_id' => $user->id,
         ];
     }
 }

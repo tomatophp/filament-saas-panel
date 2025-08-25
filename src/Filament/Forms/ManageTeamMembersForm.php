@@ -2,6 +2,7 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Forms;
 
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -35,7 +36,7 @@ class ManageTeamMembersForm
                     'email.required' => trans('filament-saas-panel::messages.teams.members.required'),
                     'email.unique' => trans('filament-saas-panel::messages.teams.members.unique'),
                 ])
-                ->disabled(fn () => auth('accounts')->user()->id !== $team->account_id),
+                ->disabled(fn () => auth(config('filament-saas-panel.auth_guard'))->user()->id !== $team->{config('filament-saas-panel.team_id_column')}),
             Forms\Components\Select::make('role')
                 ->label(trans('filament-saas-panel::messages.teams.members.role'))
                 ->searchable()
@@ -57,7 +58,11 @@ class ManageTeamMembersForm
                 ->validationMessages([
                     'role.required' => trans('filament-saas-panel::messages.teams.members.role_required'),
                 ])
-                ->disabled(fn () => auth('accounts')->user()->id !== $team->account_id),
+                ->disabled(fn () => auth(config('filament-saas-panel.auth_guard'))->user()->id !== $team->{config('filament-saas-panel.team_id_column')}),
+            Action::make('sendInvitation')
+                ->label(trans('filament-saas-panel::messages.teams.members.send_invitation'))
+                ->submit('manageTeamMembersForm')
+                ->color('primary'),
         ];
     }
 

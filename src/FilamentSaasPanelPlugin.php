@@ -2,12 +2,10 @@
 
 namespace TomatoPHP\FilamentSaasPanel;
 
+use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
-use Filament\Navigation\MenuItem;
 use Filament\Panel;
-use Laravel\Jetstream\Jetstream;
 use TomatoPHP\FilamentSaasPanel\Filament\Pages\ApiTokens;
-use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class FilamentSaasPanelPlugin implements Plugin
 {
@@ -16,7 +14,7 @@ class FilamentSaasPanelPlugin implements Plugin
         return 'filament-saas-panel';
     }
 
-    public ?string $authGuard = 'accounts';
+    public ?string $authGuard = 'web';
 
     public bool $editProfileMenu = false;
 
@@ -168,7 +166,7 @@ class FilamentSaasPanelPlugin implements Plugin
 
         if ($this->allowTenants) {
             $panel
-                ->tenant($this->useJetstreamTeamModel ? Jetstream::teamModel() : Team::class, $this->teamSlug)
+                ->tenant(config('filament-saas-panel.team_model'), $this->teamSlug)
                 ->tenantRegistration(config('filament-saas-panel.pages.teams.create'));
 
             $pages[] = config('filament-saas-panel.pages.teams.create');
@@ -182,15 +180,16 @@ class FilamentSaasPanelPlugin implements Plugin
             if ($this->editProfileMenu) {
                 if ($this->allowTenants) {
                     $panel->userMenuItems([
-                        'profile' => MenuItem::make()
-                            ->label(fn (): string => auth('accounts')->user()?->name)
+                        'profile' => fn (Action $action) => $action
+                            ->label(fn (): string => auth(config('filament-saas-panel.auth_guard'))->user()?->name)
                             ->icon('heroicon-s-user')
                             ->url(fn (): string => filament()->getTenant() ? config('filament-saas-panel.pages.profile.edit')::getUrl() : '#'),
-                    ]);
+                    ]
+                    );
                 } else {
                     $panel->userMenuItems([
-                        'profile' => MenuItem::make()
-                            ->label(fn (): string => auth('accounts')->user()?->name)
+                        'profile' => fn (Action $action) => $action
+                            ->label(fn (): string => auth(config('filament-saas-panel.auth_guard'))->user()?->name)
                             ->icon('heroicon-s-user')
                             ->url(fn (): string => config('filament-saas-panel.pages.profile.edit')::getUrl()),
                     ]);
@@ -203,7 +202,7 @@ class FilamentSaasPanelPlugin implements Plugin
             $pages[] = ApiTokens::class;
 
             if ($this->editProfileMenu) {
-                $menuItems[] = MenuItem::make()
+                $menuItems[] = Action::make('apiTokens')
                     ->label(fn (): string => ApiTokens::getNavigationLabel())
                     ->icon('heroicon-s-lock-closed')
                     ->url(fn (): string => ApiTokens::getUrl());

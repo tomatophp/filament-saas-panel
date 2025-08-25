@@ -2,39 +2,57 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Tests;
 
-use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
+use Filament\Panel;
+use Filament\Facades\Filament;
+use Laravel\Jetstream\Jetstream;
+use Filament\FilamentServiceProvider;
+use Livewire\LivewireServiceProvider;
+use Filament\Forms\FormsServiceProvider;
+use Filament\Tables\TablesServiceProvider;
+use Laravel\Fortify\FortifyServiceProvider;
+use Orchestra\Testbench\Attributes\WithEnv;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Filament\Actions\ActionsServiceProvider;
-use Filament\FilamentServiceProvider;
-use Filament\Forms\FormsServiceProvider;
-use Filament\Infolists\InfolistsServiceProvider;
-use Filament\Notifications\NotificationsServiceProvider;
+use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
-use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
-use Livewire\LivewireServiceProvider;
-use Orchestra\Testbench\Attributes\WithEnv;
 use Orchestra\Testbench\Concerns\WithWorkbench;
+use Filament\Infolists\InfolistsServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
-use Spatie\MediaLibrary\MediaLibraryServiceProvider;
-use TomatoPHP\FilamentAccounts\FilamentAccountsServiceProvider;
-use TomatoPHP\FilamentSaasPanel\FilamentSaasPanelServiceProvider;
-use TomatoPHP\FilamentSaasPanel\Tests\Models\Account;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
+use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
+use Filament\Notifications\NotificationsServiceProvider;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\Membership;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\TeamInvitation;
+use TomatoPHP\FilamentSaasPanel\FilamentSaasPanelServiceProvider;
+use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
 
 #[WithEnv('DB_CONNECTION', 'testing')]
 abstract class TestCase extends BaseTestCase
 {
-    use RefreshDatabase;
+    use LazilyRefreshDatabase;
     use WithWorkbench;
+
+    public ?Panel $panel;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->panel = Filament::getCurrentOrDefaultPanel();
+
+        Jetstream::useUserModel(config('filament-saas-panel.user_model'));
+        Jetstream::useTeamModel(config('filament-saas-panel.team_model'));
+        Jetstream::useMembershipModel(config('filament-saas-panel.membership_model'));
+        Jetstream::useTeamInvitationModel(config('filament-saas-panel.team_invitation_model'));
+    }
 
     protected function getPackageProviders($app): array
     {
-        return [
+        $providers = [
             ActionsServiceProvider::class,
             BladeCaptureDirectiveServiceProvider::class,
             BladeHeroiconsServiceProvider::class,
@@ -45,16 +63,20 @@ abstract class TestCase extends BaseTestCase
             LivewireServiceProvider::class,
             NotificationsServiceProvider::class,
             SupportServiceProvider::class,
+            SchemasServiceProvider::class,
             TablesServiceProvider::class,
             WidgetsServiceProvider::class,
             MediaLibraryServiceProvider::class,
             JetstreamServiceProvider::class,
             FortifyServiceProvider::class,
-            FilamentAccountsServiceProvider::class,
             FilamentSaasPanelServiceProvider::class,
             AppPanelProvider::class,
             AdminPanelProvider::class,
         ];
+
+        sort($providers);
+
+        return $providers;
     }
 
     protected function defineDatabaseMigrations(): void
@@ -69,7 +91,10 @@ abstract class TestCase extends BaseTestCase
         $app['config']->set('auth.guards.testing.provider', 'testing');
         $app['config']->set('auth.providers.testing.driver', 'eloquent');
         $app['config']->set('auth.providers.testing.model', User::class);
-        $app['config']->set('filament-accounts.model', Account::class);
+        $app['config']->set('filament-saas-panel.user_model', User::class);
+        $app['config']->set('filament-saas-panel.team_model', Team::class);
+        $app['config']->set('filament-saas-panel.membership_model', Membership::class);
+        $app['config']->set('filament-saas-panel.team_invitation_model', TeamInvitation::class);
 
         $app['config']->set('view.paths', [
             ...$app['config']->get('view.paths'),

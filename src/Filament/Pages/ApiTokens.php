@@ -2,14 +2,15 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages;
 
+use BackedEnum;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ApiTokens extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-key';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-key';
 
-    protected static string $view = 'filament-saas-panel::teams.api-tokens';
+    protected string $view = 'filament-saas-panel::teams.api-tokens';
 
     public static function getNavigationLabel(): string
     {

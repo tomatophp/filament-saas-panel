@@ -2,10 +2,10 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages;
 
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\RegisterTenant;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class CreateTeam extends RegisterTenant
@@ -22,23 +22,29 @@ class CreateTeam extends RegisterTenant
         return 'Create Team';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([
-                SpatieMediaLibraryFileUpload::make('avatar')
+                FileUpload::make('avatar')
+                    ->disk(config('filesystems.default'))
                     ->alignCenter()
-                    ->avatar()
-                    ->collection('avatar'),
+                    ->avatar(),
                 TextInput::make('name')
-                    ->default(auth('accounts')->user()->teams()->count() > 0 ? null : auth('accounts')->user()->name."'s Team"),
+                    ->default(auth(config('filament-saas-panel.auth_guard'))->user()->teams()->count() > 0 ? null : auth(config('filament-saas-panel.auth_guard'))->user()->name."'s Team"),
             ]);
     }
 
     protected function handleRegistration(array $data): Model
     {
         $newTeam = app(\TomatoPHP\FilamentSaasPanel\Actions\Jetstream\CreateTeam::class)
-            ->create(auth(filament()->getPlugin('filament-saas-panel')->authGuard)->user(), $data);
+            ->create(auth(config('filament-saas-panel.auth_guard'))->user(), $data);
+
+        if (isset($data['avatar'])) {
+            $newTeam->addMediaFromDisk($data['avatar'], config('filesystems.default'))
+                ->usingName($data['name'])
+                ->toMediaCollection('avatar');
+        }
 
         return $newTeam;
     }

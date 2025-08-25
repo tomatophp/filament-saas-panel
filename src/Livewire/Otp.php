@@ -11,26 +11,22 @@ use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Pages\SimplePage;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use TomatoPHP\FilamentAccounts\Models\Account;
 use TomatoPHP\FilamentSaasPanel\Events\SendOTP;
 
-class Otp extends SimplePage implements HasActions, HasForms
+class Otp extends SimplePage implements HasActions
 {
     use InteractsWithActions;
     use InteractsWithFormActions;
-    use InteractsWithForms;
     use WithRateLimiting;
 
-    protected static string $view = 'filament-saas-panel::livewire.otp';
+    protected string $view = 'filament-saas-panel::livewire.otp';
 
     /**
      * @var array<string, mixed> | null
@@ -39,7 +35,7 @@ class Otp extends SimplePage implements HasActions, HasForms
 
     public function mount(): void
     {
-        if (auth('accounts')->check()) {
+        if (auth(config('filament-saas-panel.auth_guard'))->check()) {
             redirect()->intended(config('filament-saas-panel.id'));
         }
         if (! session()->has('user_email')) {
@@ -52,7 +48,7 @@ class Otp extends SimplePage implements HasActions, HasForms
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form->schema([
             Hidden::make('email'),
@@ -71,7 +67,7 @@ class Otp extends SimplePage implements HasActions, HasForms
     public function resend()
     {
         try {
-            $this->rateLimit(1);
+            $this->rateLimit(5);
         } catch (TooManyRequestsException $exception) {
             Notification::make()
                 ->title(__('filament-panels::pages/auth/login.notifications.throttled.title', [
@@ -88,7 +84,7 @@ class Otp extends SimplePage implements HasActions, HasForms
             return null;
         }
 
-        $findAccountWithEmail = Account::query()
+        $findAccountWithEmail = config('filament-saas-panel.user_model')::query()
             ->where('email', $this->data['email'])
             ->first();
 
@@ -99,19 +95,21 @@ class Otp extends SimplePage implements HasActions, HasForms
         $findAccountWithEmail->otp_code = rand(100000, 999999);
         $findAccountWithEmail->save();
 
-        event(new SendOTP(config('filament-accounts.model'), $findAccountWithEmail->id));
+        event(new SendOTP(config('filament-saas-panel.user_model'), $findAccountWithEmail->id));
 
         Notification::make()
             ->title('OTP Send')
             ->body('OTP code has been sent to your email address.')
             ->success()
             ->send();
+
+        return null;
     }
 
     public function authenticate()
     {
         try {
-            $this->rateLimit(20);
+            $this->rateLimit(config('filament-saas-panel.otp_rate_limit'));
         } catch (TooManyRequestsException $exception) {
             Notification::make()
                 ->title(__('filament-panels::pages/auth/login.notifications.throttled.title', [
@@ -130,7 +128,7 @@ class Otp extends SimplePage implements HasActions, HasForms
 
         $data = $this->form->getState();
 
-        $findAccountWithEmailAndOTP = Account::query()
+        $findAccountWithEmailAndOTP = config('filament-saas-panel.user_model')::query()
             ->where('email', $data['email'])
             ->where('otp_code', $data['otp'])
             ->first();
@@ -139,7 +137,7 @@ class Otp extends SimplePage implements HasActions, HasForms
             $this->throwFailureOtpException();
         }
 
-        Auth::guard('accounts')->login($findAccountWithEmailAndOTP);
+        Auth::guard(config('filament-saas-panel.auth_guard'))->login($findAccountWithEmailAndOTP);
 
         if ($findAccountWithEmailAndOTP) {
             $findAccountWithEmailAndOTP->otp_code = null;
@@ -158,23 +156,23 @@ class Otp extends SimplePage implements HasActions, HasForms
     protected function throwFailureOtpException(): never
     {
         throw ValidationException::withMessages([
-            'data.otp' => 'otp not correct',
+            'data.otp' => trans('filament-saas-panel::messages.otp.otp_not_correct'),
         ]);
     }
 
     public function getTitle(): string|Htmlable
     {
-        return 'OTP Authentication';
+        return trans('filament-saas-panel::messages.otp.title');
     }
 
     public function getSubHeading(): string
     {
-        return 'Please enter the OTP code sent to your email address.';
+        return trans('filament-saas-panel::messages.otp.subheading');
     }
 
     public function getHeading(): string|Htmlable
     {
-        return 'OTP Authentication';
+        return trans('filament-saas-panel::messages.otp.heading');
     }
 
     /**
@@ -194,11 +192,11 @@ class Otp extends SimplePage implements HasActions, HasForms
             ->submit('authenticate');
     }
 
-    protected function getResendFormAction(): \Filament\Forms\Components\Actions\Action
+    protected function getResendFormAction(): Action
     {
-        return \Filament\Forms\Components\Actions\Action::make('getResendFormAction')
+        return Action::make('getResendFormAction')
             ->link()
-            ->label('Resend OTP')
+            ->label(trans('filament-saas-panel::messages.otp.resend_otp'))
             ->color('warning')
             ->action('resend');
     }

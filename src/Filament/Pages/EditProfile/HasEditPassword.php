@@ -4,13 +4,13 @@ namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile;
 
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use TomatoPHP\FilamentSaasPanel\Filament\Forms\EditPasswordForm;
 
 trait HasEditPassword
 {
-    public function editPasswordForm(Form $form): Form
+    public function editPasswordForm(Schema $form): Schema
     {
         return $form
             ->schema(EditPasswordForm::get())

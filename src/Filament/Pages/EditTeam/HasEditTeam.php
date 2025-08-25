@@ -3,16 +3,15 @@
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
 
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
 use TomatoPHP\FilamentSaasPanel\Filament\Forms\UpdateTeamForm;
 
 trait HasEditTeam
 {
-    public function editTeamForm(Form $form): Form
+    public function editTeamForm(Schema $form): Schema
     {
         return $form->schema([
             Section::make(trans('filament-saas-panel::messages.teams.edit.title'))
@@ -21,17 +20,6 @@ trait HasEditTeam
         ])
             ->model(Filament::getTenant())
             ->statePath('editTeamData');
-    }
-
-    public function getEditTeamActions(): array
-    {
-        return [
-            Action::make('editTeam')
-                ->requiresConfirmation()
-                ->label(trans('filament-saas-panel::messages.teams.edit.save'))
-                ->submit('editTeamForm')
-                ->color('primary'),
-        ];
     }
 
     public function saveEditTeam()

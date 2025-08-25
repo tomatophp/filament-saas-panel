@@ -4,7 +4,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    actingAs(\TomatoPHP\FilamentSaasPanel\Tests\Models\Account::factory()->create(), 'accounts');
+    actingAs(\TomatoPHP\FilamentSaasPanel\Tests\Models\User::factory()->create(), config('filament-saas-panel.auth_guard'));
 });
 
 it('can render create team page', function () {
@@ -21,6 +21,6 @@ it('can register new team', function () {
 
     \Pest\Laravel\assertDatabaseHas(\TomatoPHP\FilamentSaasPanel\Models\Team::class, [
         'name' => 'Team 1',
-        'account_id' => auth('accounts')->user()->id,
+        'user_id' => auth(config('filament-saas-panel.auth_guard'))->user()->id,
     ]);
 });

@@ -2,7 +2,7 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Listeners;
 
-use Filament\Events\Auth\Registered;
+use Filament\Auth\Events\Registered;
 
 class CreatePersonalTeam
 {

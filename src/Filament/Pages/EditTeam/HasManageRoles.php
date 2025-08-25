@@ -19,7 +19,7 @@ trait HasManageRoles
             ->color('info')
             ->label($role)
             ->modelLabel(trans('filament-saas-panel::messages.teams.members.manage_role'))
-            ->form(function (array $arguments) {
+            ->schema(function (array $arguments) {
                 return [
                     Select::make('role')
                         ->default($arguments['role'])

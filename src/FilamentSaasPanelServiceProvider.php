@@ -2,8 +2,9 @@
 
 namespace TomatoPHP\FilamentSaasPanel;
 
-use Filament\Events\Auth\Registered;
+use Filament\Auth\Events\Registered;
 use Filament\Events\TenantSet;
+use Filament\Livewire\Notifications;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -14,9 +15,6 @@ use TomatoPHP\FilamentSaasPanel\Listeners\CreatePersonalTeam;
 use TomatoPHP\FilamentSaasPanel\Listeners\SwitchTeam;
 use TomatoPHP\FilamentSaasPanel\Livewire\Otp;
 use TomatoPHP\FilamentSaasPanel\Livewire\SanctumTokens;
-use TomatoPHP\FilamentSaasPanel\Models\Membership;
-use TomatoPHP\FilamentSaasPanel\Models\Team;
-use TomatoPHP\FilamentSaasPanel\Models\TeamInvitation;
 
 class FilamentSaasPanelServiceProvider extends ServiceProvider
 {
@@ -73,15 +71,11 @@ class FilamentSaasPanelServiceProvider extends ServiceProvider
             __DIR__.'/../publish/Membership.php' => app_path('Models/Membership.php'),
         ], 'filament-saas-teams-models');
 
-        $this->publishes([
-            __DIR__.'/../publish/Account.php' => app_path('Models/Account.php'),
-        ], 'filament-saas-account-model');
-
         if (class_exists(Jetstream::class)) {
-            Jetstream::useUserModel(config('filament-accounts.model'));
-            Jetstream::useTeamModel(Team::class);
-            Jetstream::useMembershipModel(Membership::class);
-            Jetstream::useTeamInvitationModel(TeamInvitation::class);
+            Jetstream::useUserModel(config('filament-saas-panel.user_model'));
+            Jetstream::useTeamModel(config('filament-saas-panel.team_model'));
+            Jetstream::useMembershipModel(config('filament-saas-panel.membership_model'));
+            Jetstream::useTeamInvitationModel(config('filament-saas-panel.team_invitation_model'));
             Jetstream::$registersRoutes = false;
             Fortify::$registersRoutes = false;
 
@@ -90,25 +84,12 @@ class FilamentSaasPanelServiceProvider extends ServiceProvider
 
         Livewire::component('sanctum-tokens', SanctumTokens::class);
         Livewire::component('otp', Otp::class);
+        Livewire::component('notifications', Notifications::class);
     }
 
     public function boot(): void
     {
-        $this->registerAuthAccount();
         $this->configurePermissions();
-    }
-
-    protected function registerAuthAccount(): void
-    {
-        Config::set('auth.guards.accounts', [
-            'driver' => 'session',
-            'provider' => 'accounts',
-        ]);
-
-        Config::set('auth.providers.accounts', [
-            'driver' => 'eloquent',
-            'model' => config('filament-accounts.model'),
-        ]);
     }
 
     /**
@@ -116,17 +97,17 @@ class FilamentSaasPanelServiceProvider extends ServiceProvider
      */
     protected function configurePermissions(): void
     {
-        Jetstream::role('admin', trans('filament-accounts::messages.roles.admin.name'), [
+        Jetstream::role('admin', trans('filament-saas-panel::messages.roles.admin.name'), [
             'create',
             'read',
             'update',
             'delete',
-        ])->description(trans('filament-accounts::messages.roles.admin.description'));
+        ])->description(trans('filament-saas-panel::messages.roles.admin.description'));
 
-        Jetstream::role('user', trans('filament-accounts::messages.roles.user.name'), [
+        Jetstream::role('user', trans('filament-saas-panel::messages.roles.user.name'), [
             'read',
             'update',
-        ])->description(trans('filament-accounts::messages.roles.user.description'));
+        ])->description(trans('filament-saas-panel::messages.roles.user.description'));
 
         Jetstream::permissions([
             'create',

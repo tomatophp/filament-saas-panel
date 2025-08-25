@@ -2,10 +2,10 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Actions\Jetstream;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Events\AddingTeam;
-use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class CreateTeam implements CreatesTeams
 {
@@ -14,7 +14,7 @@ class CreateTeam implements CreatesTeams
      *
      * @param  array<string, string>  $input
      */
-    public function create(mixed $user, array $input): Team
+    public function create(mixed $user, array $input): Model
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],

@@ -29,10 +29,10 @@ class TeamsController
 
             $invitation->delete();
 
-            return redirect()->to(url(Filament::getCurrentPanel()->getId().'/'.$invitation->team->id));
+            return redirect()->to(url(Filament::getCurrentOrDefaultPanel()->getId().'/'.$invitation->team->id));
         }
 
-        return redirect()->to(url(Filament::getCurrentPanel()->getId()));
+        return redirect()->to(url(Filament::getCurrentOrDefaultPanel()->getId()));
     }
 
     public function cancel(Request $request, $invitationId)
@@ -45,6 +45,6 @@ class TeamsController
             $invitation->delete();
         }
 
-        return redirect()->to(url(Filament::getCurrentPanel()->getId()));
+        return redirect()->to(url(Filament::getCurrentOrDefaultPanel()->getId()));
     }
 }

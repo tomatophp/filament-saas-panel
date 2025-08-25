@@ -2,10 +2,10 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Forms;
 
+use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Section;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Hash;
 
 class DeleteAccountForm
@@ -20,37 +20,35 @@ class DeleteAccountForm
                         ->label(__('Delete Account'))
                         ->hiddenLabel()
                         ->view('filament-saas-panel::forms.components.delete-account-description'),
-                    Actions::make([
-                        Actions\Action::make('deleteAccount')
-                            ->label(trans('filament-saas-panel::messages.profile.delete.delete_account'))
-                            ->icon('heroicon-m-trash')
-                            ->color('danger')
-                            ->requiresConfirmation()
-                            ->modalHeading(trans('filament-saas-panel::messages.profile.delete.delete_account'))
-                            ->modalDescription(trans('filament-saas-panel::messages.profile.delete.are_you_sure'))
-                            ->modalSubmitActionLabel(trans('filament-saas-panel::messages.profile.delete.yes_delete_it'))
-                            ->form([
-                                Forms\Components\TextInput::make('password')
-                                    ->password()
-                                    ->revealable()
-                                    ->label(trans('filament-saas-panel::messages.profile.delete.password'))
-                                    ->required(),
-                            ])
-                            ->action(function (array $data) {
+                    Action::make('deleteAccount')
+                        ->label(trans('filament-saas-panel::messages.profile.delete.delete_account'))
+                        ->icon('heroicon-m-trash')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->modalHeading(trans('filament-saas-panel::messages.profile.delete.delete_account'))
+                        ->modalDescription(trans('filament-saas-panel::messages.profile.delete.are_you_sure'))
+                        ->modalSubmitActionLabel(trans('filament-saas-panel::messages.profile.delete.yes_delete_it'))
+                        ->schema([
+                            Forms\Components\TextInput::make('password')
+                                ->password()
+                                ->revealable()
+                                ->label(trans('filament-saas-panel::messages.profile.delete.password'))
+                                ->required(),
+                        ])
+                        ->action(function (array $data) {
 
-                                if (! Hash::check($data['password'], auth('accounts')->user()->password)) {
-                                    self::sendErrorDeleteAccount(trans('filament-saas-panel::messages.profile.delete.incorrect_password'));
+                            if (! Hash::check($data['password'], auth('accounts')->user()->password)) {
+                                self::sendErrorDeleteAccount(trans('filament-saas-panel::messages.profile.delete.incorrect_password'));
 
-                                    return;
-                                }
+                                return;
+                            }
 
-                                auth('accounts')->user()?->update([
-                                    'is_active' => false,
-                                ]);
+                            auth('accounts')->user()?->update([
+                                'is_active' => false,
+                            ]);
 
-                                auth('accounts')->user()?->delete();
-                            }),
-                    ]),
+                            auth('accounts')->user()?->delete();
+                        }),
                 ]),
         ];
     }

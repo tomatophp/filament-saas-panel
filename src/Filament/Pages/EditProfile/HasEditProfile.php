@@ -3,14 +3,14 @@
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile;
 
 use Filament\Actions\Action;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
 use TomatoPHP\FilamentSaasPanel\Filament\Forms\EditProfileForm;
 
 trait HasEditProfile
 {
-    public function editProfileForm(Form $form): Form
+    public function editProfileForm(Schema $form): Schema
     {
         return $form
             ->schema(EditProfileForm::get())

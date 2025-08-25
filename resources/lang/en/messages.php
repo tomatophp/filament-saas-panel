@@ -1,6 +1,22 @@
 <?php
 
 return [
+    'login' => [
+        'title' => 'Login',
+        'description' => 'Login to your account to continue.',
+        'email' => 'Email',
+        'password' => 'Password',
+        'remember_me' => 'Remember me',
+        'active' => "Your account is not active, please contact the administrator.",
+    ],
+    'register' => [
+        'title' => 'Register',
+        'description' => 'Register a new account to continue.',
+        'name' => 'Name',
+        'email' => 'Email',
+        'password' => 'Password',
+        'confirm_password' => 'Confirm Password',
+    ],
     'profile' => [
         'title' => 'Edit Profile',
         'edit' => [
@@ -150,4 +166,29 @@ return [
         'teams' => 'Teams',
     ],
     'filter' => 'Filter By Teams',
+    'roles' => [
+        'admin' => [
+            'name' => 'Admin',
+            'description' => 'Admin can manage all the teams and users.',
+        ],
+        'editor' => [
+            'name' => 'Editor',
+            'description' => 'Editor can manage the teams and users.',
+        ],
+        'viewer' => [
+            'name' => 'Viewer',
+            'description' => 'Viewer can view the teams and users.',
+        ],
+        'user' => [
+            'name' => 'User',
+            'description' => 'User can view the teams and users.',
+        ],
+    ],
+    'otp' => [
+        'title' => 'OTP Authentication',
+        'subheading' => 'Please enter the OTP code sent to your email address.',
+        'heading' => 'OTP Authentication',
+        'otp_not_correct' => 'OTP not correct',
+        'resend_otp' => 'Resend OTP',
+    ],
 ];

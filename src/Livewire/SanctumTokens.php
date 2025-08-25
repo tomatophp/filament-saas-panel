@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
@@ -48,30 +50,30 @@ class SanctumTokens extends Component implements HasActions, HasForms, HasTable
             ]))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label(trans('filament-accounts::messages.profile.token.name')),
+                    ->label(trans('filament-saas-panel::messages.profile.token.name')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->date()
-                    ->label(trans('filament-accounts::messages.profile.token.created_at'))
+                    ->label(trans('filament-saas-panel::messages.profile.token.created_at'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('expires_at')
                     ->color(fn ($record) => now()->gt($record->expires_at) ? 'danger' : null)
                     ->date()
-                    ->label(trans('filament-accounts::messages.profile.token.expires_at'))
+                    ->label(trans('filament-saas-panel::messages.profile.token.expires_at'))
                     ->sortable(),
             ])
-            ->actions([
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                DeleteAction::make(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->label(trans('filament-accounts::messages.profile.token.action_label'))
+                CreateAction::make()
+                    ->label(trans('filament-saas-panel::messages.profile.token.action_label'))
                     ->modalWidth('md')
-                    ->form([
+                    ->schema([
                         TextInput::make('token_name')
-                            ->label(trans('filament-accounts::messages.profile.token.name'))
+                            ->label(trans('filament-saas-panel::messages.profile.token.name'))
                             ->required(),
                         CheckboxList::make('abilities')
-                            ->label(trans('filament-accounts::messages.profile.token.abilities'))
+                            ->label(trans('filament-saas-panel::messages.profile.token.abilities'))
                             ->options(function () {
                                 return collect(['create', 'view', 'update', 'delete'])->mapWithKeys(function ($item, $key) {
                                     $key = is_string($key) ? $key : strtolower($item);
@@ -82,7 +84,7 @@ class SanctumTokens extends Component implements HasActions, HasForms, HasTable
                             ->columns(2)
                             ->required(),
                         DatePicker::make('expires_at')
-                            ->label(trans('filament-accounts::messages.profile.token.expires_at')),
+                            ->label(trans('filament-saas-panel::messages.profile.token.expires_at')),
                     ])
                     ->action(function ($data) {
                         $this->plainTextToken = $this->user->createToken(
@@ -97,13 +99,13 @@ class SanctumTokens extends Component implements HasActions, HasForms, HasTable
 
                         Notification::make()
                             ->success()
-                            ->title(trans('filament-accounts::messages.profile.token.create_notification'))
+                            ->title(trans('filament-saas-panel::messages.profile.token.create_notification'))
                             ->send();
                     })
-                    ->modalHeading(trans('filament-accounts::messages.profile.token.modal_heading')),
+                    ->modalHeading(trans('filament-saas-panel::messages.profile.token.modal_heading')),
             ])
-            ->emptyStateHeading(trans('filament-accounts::messages.profile.token.empty_state_heading'))
-            ->emptyStateDescription(trans('filament-accounts::messages.profile.token.empty_state_description'));
+            ->emptyStateHeading(trans('filament-saas-panel::messages.profile.token.empty_state_heading'))
+            ->emptyStateDescription(trans('filament-saas-panel::messages.profile.token.empty_state_description'));
     }
 
     public function showTokenAction(): Action
@@ -112,12 +114,12 @@ class SanctumTokens extends Component implements HasActions, HasForms, HasTable
             ->fillForm(fn (array $arguments) => [
                 'token' => $arguments['token'],
             ])
-            ->form([
+            ->schema([
                 TextInput::make('token')
-                    ->label(trans('filament-accounts::messages.profile.token.token'))
-                    ->helperText(trans('filament-accounts::messages.profile.token.helper_text')),
+                    ->label(trans('filament-saas-panel::messages.profile.token.token'))
+                    ->helperText(trans('filament-saas-panel::messages.profile.token.helper_text')),
             ])
-            ->modalHeading(trans('filament-accounts::messages.profile.token.modal_heading_2'))
+            ->modalHeading(trans('filament-saas-panel::messages.profile.token.modal_heading_2'))
             ->modalIcon('heroicon-o-key')
             ->modalAlignment(Alignment::Center)
             ->modalSubmitAction(false)

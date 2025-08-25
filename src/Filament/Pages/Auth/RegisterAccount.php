@@ -3,12 +3,13 @@
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth;
 
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
-use Filament\Events\Auth\Registered;
+use Filament\Auth\Events\Registered;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
+use Filament\Auth\Pages\Register;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Pages\Auth\Register;
 use Illuminate\Support\Facades\DB;
 use TomatoPHP\FilamentSaasPanel\Events\SendOTP;
 use TomatoPHP\FilamentSaasPanel\Responses\RegisterResponse;
@@ -49,7 +50,7 @@ class RegisterAccount extends Register
         ];
     }
 
-    public function register(): ?RegisterResponse
+    public function register(): ?RegistrationResponse
     {
         try {
             $this->rateLimit(2);
@@ -80,7 +81,7 @@ class RegisterAccount extends Register
         $user->otp_code = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
         $user->save();
 
-        event(new SendOTP(config('filament-accounts.model'), $user->id));
+        event(new SendOTP(config('filament-saas-panel.user_model'), $user->id));
 
         session()->put('user_email', $user->email);
 

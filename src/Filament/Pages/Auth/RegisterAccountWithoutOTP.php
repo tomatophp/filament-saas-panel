@@ -3,14 +3,14 @@
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth;
 
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
-use Filament\Events\Auth\Registered;
+use Filament\Auth\Events\Registered;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
+use Filament\Auth\Pages\Register;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
 use Filament\Notifications\Notification;
-use Filament\Pages\Auth\Register;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\DB;
 
 class RegisterAccountWithoutOTP extends Register
@@ -28,7 +28,7 @@ class RegisterAccountWithoutOTP extends Register
     }
 
     /**
-     * @return array<int | string, string | Form>
+     * @return array<int | string, string | Schema>
      */
     protected function getForms(): array
     {
@@ -72,7 +72,7 @@ class RegisterAccountWithoutOTP extends Register
         $user = DB::transaction(function () {
             $data = $this->form->getState();
 
-            return $this->getUserModel()::create($data);
+            return config('filament-saas-panel.user_model')::create($data);
         });
 
         event(new Registered($user));

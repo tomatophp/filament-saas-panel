@@ -12,7 +12,6 @@ use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use TomatoPHP\FilamentAccounts\Models\Account;
 use TomatoPHP\FilamentSaasPanel\Tests\Database\Factories\TeamFactory;
 
 class Team extends JetstreamTeam implements HasAvatar, HasMedia
@@ -26,7 +25,7 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
      * @var array<int, string>
      */
     protected $fillable = [
-        'account_id',
+        'user_id',
         'name',
         'personal_team',
     ];
@@ -70,12 +69,12 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function accounts(): BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'team_user', 'team_id', 'account_id');
+        return $this->belongsToMany(User::class, 'team_user', 'team_id', 'user_id');
     }
 
     protected static function newFactory(): TeamFactory

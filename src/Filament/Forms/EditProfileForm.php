@@ -2,14 +2,16 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Forms;
 
+use Filament\Actions\Action;
 use Filament\Forms;
+use Filament\Schemas\Components\Section;
 
 class EditProfileForm
 {
     public static function get(): array
     {
         return [
-            Forms\Components\Section::make(trans('filament-saas-panel::messages.profile.edit.title'))
+            Section::make(trans('filament-saas-panel::messages.profile.edit.title'))
                 ->description(trans('filament-saas-panel::messages.profile.edit.description'))
                 ->schema([
                     Forms\Components\SpatieMediaLibraryFileUpload::make('avatar')
@@ -29,6 +31,9 @@ class EditProfileForm
                         ->email()
                         ->required()
                         ->unique(ignoreRecord: true),
+                    Action::make('getUpdateProfileFormActions')
+                        ->label(trans('filament-saas-panel::messages.save'))
+                        ->submit('editProfileForm'),
                 ]),
         ];
     }

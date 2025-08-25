@@ -2,15 +2,16 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
 
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Support\Exceptions\Halt;
 use Laravel\Jetstream\Events\TeamMemberRemoved;
 
 trait HasLeavingTeam
 {
-    public function getLeavingTeamAction()
+    public function getLeavingTeamAction(): Action
     {
-        return \Filament\Actions\Action::make('getLeavingTeamAction')
+        return Action::make('getLeavingTeamAction')
             ->requiresConfirmation()
             ->link()
             ->color('danger')
@@ -20,9 +21,9 @@ trait HasLeavingTeam
             });
     }
 
-    public function getRemoveMemberAction()
+    public function getRemoveMemberAction(): Action
     {
-        return \Filament\Actions\Action::make('getRemoveMemberAction')
+        return Action::make('getRemoveMemberAction')
             ->requiresConfirmation()
             ->link()
             ->color('danger')
@@ -34,16 +35,17 @@ trait HasLeavingTeam
 
     public function removeMember($user)
     {
-        $teamMember = config('filament-accounts.model')::find($user);
+        $teamMember = config('filament-saas-panel.user_model')::find($user);
         try {
             Filament::getTenant()->removeUser($teamMember);
             TeamMemberRemoved::dispatch(Filament::getTenant(), $teamMember);
+            $teamMember->current_team_id = $teamMember->teams()->first()?->id ?? null;
         } catch (Halt $exception) {
             return;
         }
 
         $this->sendSuccessNotification();
 
-        return redirect()->to(Filament::getCurrentPanel()->getUrl());
+        return redirect()->to(Filament::getCurrentOrDefaultPanel()->getUrl());
     }
 }

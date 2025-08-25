@@ -6,39 +6,39 @@
         <div class="">
             <div class="mt-4 text-sm text-gray-600">
                 <div class="text-sm text-gray-600 dark:text-gray-400">
-                    {{ trans('filament-accounts::messages.profile.browser.sessions_content') }}
+                    {{ trans('filament-saas-panel::messages.profile.browser.sessions_content') }}
                 </div>
                 @if (count($data) > 0)
-                    <div class="mt-5 space-y-6">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
                         @foreach ($data as $session)
-                            <div class="flex items-center">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
                                     @if ($session->device['desktop'])
                                         <x-filament::icon
                                             icon="heroicon-o-computer-desktop"
-                                            class="w-8 h-8 text-gray-500 dark:text-gray-400"
+                                            class="fi-size-lg fi-circular"
                                         />
                                     @else
                                         <x-filament::icon
                                             icon="heroicon-o-device-phone-mobile"
-                                            class="w-8 h-8 text-gray-500 dark:text-gray-400"
+                                            class="fi-size-lg fi-circular"
                                         />
                                     @endif
                                 </div>
 
-                                <div class="ms-3">
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <div class="text-sm text-gray-600 dark:text-gray-400">
                                         {{ $session->device['platform'] ? $session->device['platform'] : __('Unknown') }} - {{ $session->device['browser'] ? $session->device['browser'] : __('Unknown') }}
                                     </div>
 
                                     <div>
-                                        <div class="text-xs text-gray-500">
+                                        <div style="font-size: 12px; color: #6b7280;">
                                             {{ $session->ip_address }},
 
                                             @if ($session->is_current_device)
-                                                <span class="font-semibold text-primary-500">{{ trans('filament-accounts::messages.profile.browser.sessions_device') }}</span>
+                                                <span class="font-semibold text-primary-500">{{ trans('filament-saas-panel::messages.profile.browser.sessions_device') }}</span>
                                             @else
-                                                {{ trans('filament-accounts::messages.profile.browser.sessions_last_active') }} {{ $session->last_active }}
+                                                {{ trans('filament-saas-panel::messages.profile.browser.sessions_last_active') }} {{ $session->last_active }}
                                             @endif
                                         </div>
                                     </div>

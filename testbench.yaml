@@ -7,10 +7,15 @@ providers:
   - Filament\Infolists\InfolistsServiceProvider
   - Filament\Notifications\NotificationsServiceProvider
   - Filament\Support\SupportServiceProvider
+  - Laravel\Jetstream\JetstreamServiceProvider
+  - Laravel\Fortify\FortifyServiceProvider
+  - Spatie\MediaLibrary\MediaLibraryServiceProvider
+  - Livewire\LivewireServiceProvider
+  - Filament\Schemas\SchemasServiceProvider
   - Filament\Tables\TablesServiceProvider
   - Filament\Widgets\WidgetsServiceProvider
+  - Filament\Schemas\SchemasServiceProvider
   - RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider
-  - TomatoPHP\FilamentAccounts\FilamentAccountsServiceProvider
   - TomatoPHP\FilamentSaasPanel\FilamentSaasPanelServiceProvider
   - TomatoPHP\FilamentSaasPanel\Tests\AdminPanelProvider
   - TomatoPHP\FilamentSaasPanel\Tests\AppPanelProvider

@@ -1,33 +1,23 @@
 <x-filament-panels::page>
-    <x-filament-panels::form wire:submit="updateProfile">
+    <form wire:submit="updateProfile">
         {{ $this->editProfileForm }}
-
-        <x-filament-panels::form.actions
-            alignment="right"
-            :actions="$this->getUpdateProfileFormActions()"
-        />
-    </x-filament-panels::form>
+    </form>
 
     @if(filament()->getPlugin('filament-saas-panel')->editPassword)
-        <x-filament-panels::form wire:submit="updatePassword">
+        <form wire:submit="updatePassword">
             {{ $this->editPasswordForm }}
-
-            <x-filament-panels::form.actions
-                alignment="right"
-                :actions="$this->getUpdatePasswordFormActions()"
-            />
-        </x-filament-panels::form>
+        </form>
     @endif
 
     @if(filament()->getPlugin('filament-saas-panel')->browserSessionManager)
-        <x-filament-panels::form>
+        <form>
             {{ $this->browserSessionsForm }}
-        </x-filament-panels::form>
+        </form>
     @endif
 
     @if(filament()->getPlugin('filament-saas-panel')->deleteAccount)
-        <x-filament-panels::form>
+        <form>
             {{ $this->deleteAccountForm }}
-        </x-filament-panels::form>
+        </form>
     @endif
 </x-filament-panels::page>

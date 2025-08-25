@@ -2,7 +2,7 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Responses;
 
-use Filament\Http\Responses\Auth\Contracts\RegistrationResponse;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
 
 class RegisterResponse implements RegistrationResponse
 {

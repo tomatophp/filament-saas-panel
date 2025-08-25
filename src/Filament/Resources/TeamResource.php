@@ -2,12 +2,16 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Resources;
 
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use TomatoPHP\FilamentAccounts\Components\AccountColumn;
 use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class TeamResource extends Resource
@@ -16,7 +20,7 @@ class TeamResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     public static function getLabel(): ?string
     {
@@ -38,7 +42,7 @@ class TeamResource extends Resource
         return trans('filament-accounts::messages.group');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([
@@ -65,20 +69,11 @@ class TeamResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $columns = [];
-
-        if (filament('filament-accounts')->useAvatar()) {
-            $columns[] = AccountColumn::make('owner.id')
-                ->label(trans('filament-accounts::messages.team.columns.owner'))
-                ->sortable();
-        } else {
-            $columns[] = Tables\Columns\TextColumn::make('owner.name')
-                ->label(trans('filament-accounts::messages.team.columns.owner'))
-                ->sortable();
-        }
-
         return $table
-            ->columns(array_merge([
+            ->columns([
+                Tables\Columns\TextColumn::make('owner.name')
+                    ->label(trans('filament-accounts::messages.team.columns.owner'))
+                    ->sortable(),
                 Tables\Columns\ImageColumn::make('avatar')
                     ->circular()
                     ->label(trans('filament-accounts::messages.team.columns.avatar'))
@@ -98,21 +93,21 @@ class TeamResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ], $columns))
+            ])
             ->filters([
                 Tables\Filters\SelectFilter::make('owner')
                     ->label(trans('filament-accounts::messages.team.columns.owner'))
                     ->searchable()
                     ->relationship('owner', 'name'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->defaultSort('id', 'desc')
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

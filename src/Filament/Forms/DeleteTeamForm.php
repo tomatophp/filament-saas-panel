@@ -2,11 +2,11 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Forms;
 
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Section;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,41 +22,39 @@ class DeleteTeamForm
                         ->label(__('Delete Team'))
                         ->hiddenLabel()
                         ->view('filament-saas-panel::forms.components.delete-team-description'),
-                    Actions::make([
-                        Actions\Action::make('deleteAccount')
-                            ->label(trans('filament-saas-panel::messages.profile.delete-team.delete'))
-                            ->icon('heroicon-m-trash')
-                            ->color('danger')
-                            ->requiresConfirmation()
-                            ->modalHeading(trans('filament-saas-panel::messages.profile.delete-team.delete_account'))
-                            ->modalDescription(trans('filament-saas-panel::messages.profile.delete-team.are_you_sure'))
-                            ->modalSubmitActionLabel(trans('filament-saas-panel::messages.profile.delete-team.yes_delete_it'))
-                            ->form([
-                                Forms\Components\TextInput::make('password')
-                                    ->password()
-                                    ->revealable()
-                                    ->label(trans('filament-saas-panel::messages.profile.delete-team.password'))
-                                    ->required(),
-                            ])
-                            ->action(function (array $data) use ($team) {
+                    Action::make('deleteAccount')
+                        ->label(trans('filament-saas-panel::messages.profile.delete-team.delete'))
+                        ->icon('heroicon-m-trash')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->modalHeading(trans('filament-saas-panel::messages.profile.delete-team.delete_account'))
+                        ->modalDescription(trans('filament-saas-panel::messages.profile.delete-team.are_you_sure'))
+                        ->modalSubmitActionLabel(trans('filament-saas-panel::messages.profile.delete-team.yes_delete_it'))
+                        ->schema([
+                            Forms\Components\TextInput::make('password')
+                                ->password()
+                                ->revealable()
+                                ->label(trans('filament-saas-panel::messages.profile.delete-team.password'))
+                                ->required(),
+                        ])
+                        ->action(function (array $data) use ($team) {
 
-                                if (! Hash::check($data['password'], Auth::user()->password)) {
-                                    self::sendErrorDeleteAccount(trans('filament-saas-panel::messages.profile.delete-team.incorrect_password'));
+                            if (! Hash::check($data['password'], Auth::user()->password)) {
+                                self::sendErrorDeleteAccount(trans('filament-saas-panel::messages.profile.delete-team.incorrect_password'));
 
-                                    return;
-                                }
+                                return;
+                            }
 
-                                $team?->delete();
+                            $team?->delete();
 
-                                Notification::make()
-                                    ->title('Team deleted')
-                                    ->body('The team has been deleted successfully.')
-                                    ->success()
-                                    ->send();
+                            Notification::make()
+                                ->title('Team deleted')
+                                ->body('The team has been deleted successfully.')
+                                ->success()
+                                ->send();
 
-                                return redirect()->to(url(Filament::getCurrentPanel()->getId()));
-                            }),
-                    ]),
+                            return redirect()->to(url(Filament::getCurrentPanel()->getId()));
+                        }),
                 ]),
         ];
     }

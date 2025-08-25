@@ -19,7 +19,7 @@ class EditProfile extends Page implements HasForms
     use HasEditProfile;
     use InteractsWithForms;
 
-    protected static string $view = 'filament-saas-panel::teams.edit-profile';
+    protected string $view = 'filament-saas-panel::teams.edit-profile';
 
     protected ?string $maxWidth = '6xl';
 
@@ -87,7 +87,7 @@ class EditProfile extends Page implements HasForms
 
     public function getUser()
     {
-        return auth(filament()->getPlugin('filament-saas-panel')->authGuard)->user();
+        return auth(config('filament-saas-panel.auth_guard'))->user();
     }
 
     public function sendSuccessNotification()

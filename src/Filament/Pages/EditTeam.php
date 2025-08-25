@@ -24,7 +24,7 @@ class EditTeam extends EditTenantProfile
     use HasNotifications;
     use HasTeamInvitation;
 
-    protected static string $view = 'filament-saas-panel::teams.edit-team';
+    protected string $view = 'filament-saas-panel::teams.edit-team';
 
     public static function isShouldRegisterNavigation(): bool
     {

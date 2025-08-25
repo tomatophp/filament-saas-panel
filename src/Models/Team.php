@@ -12,7 +12,6 @@ use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use TomatoPHP\FilamentAccounts\Models\Account;
 
 class Team extends JetstreamTeam implements HasAvatar, HasMedia
 {
@@ -59,7 +58,7 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->getFirstMediaUrl('avatar') ?: null;
+        return $this->getFirstMediaUrl('avatar') ?: 'https://ui-avatars.com/api/?name='.str($this->name)->replace(' ', '+')->toString().'&color=FFFFFF&background=020617';
     }
 
     public function getAvatarAttribute(): string
@@ -69,11 +68,11 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('filament-saas-panel.user_model'), config('filament-saas-panel.team_id_column'));
     }
 
     public function accounts(): BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'team_user', 'team_id', 'account_id');
+        return $this->belongsToMany(config('filament-saas-panel.user_model'), 'team_user', 'team_id', config('filament-saas-panel.team_id_column'));
     }
 }

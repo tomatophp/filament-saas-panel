@@ -2,31 +2,20 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
 
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Jetstream\Events\InvitingTeamMember;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Mail\TeamInvitation;
 
 trait HasTeamInvitation
 {
-    public function getSendInvitationActions(): array
+    public function getResendInvitationAction(): Action
     {
-        return [
-            Action::make('sendInvitation')
-                ->label(trans('filament-saas-panel::messages.teams.members.send_invitation'))
-                ->submit('manageTeamMembersForm')
-                ->color('primary'),
-        ];
-    }
-
-    public function getResendInvitationAction()
-    {
-        return \Filament\Actions\Action::make('getResendInvitationAction')
+        return Action::make('getResendInvitationAction')
             ->requiresConfirmation()
             ->color('warning')
             ->label(trans('filament-saas-panel::messages.teams.actions.resend_invitation'))
@@ -42,9 +31,11 @@ trait HasTeamInvitation
 
             $invitation = $model::whereKey($invitationId)->first();
 
-            Mail::to($invitation->email)->send(new TeamInvitation($invitation));
+            $mail = config('filament-saas-panel.team_invitation_mail');
 
-            $account = config('filament-accounts.model')::where('email', $invitation->email)->first();
+            Mail::to($invitation->email)->send(new $mail($invitation));
+
+            $account = config('filament-saas-panel.user_model')::where('email', $invitation->email)->first();
 
             if ($account) {
                 Notification::make()
@@ -52,15 +43,15 @@ trait HasTeamInvitation
                     ->body(trans('filament-saas-panel::messages.teams.members.notifications.body', ['team' => $invitation->team->name]))
                     ->success()
                     ->actions([
-                        \Filament\Notifications\Actions\Action::make('acceptInvitation')
+                        Action::make('acceptInvitation')
                             ->label(trans('filament-saas-panel::messages.teams.members.notifications.accept'))
                             ->color('success')
                             ->markAsRead()
-                            ->url(route('accounts.team-invitations.accept', ['invitation' => $invitation->id])),
-                        \Filament\Notifications\Actions\Action::make('cancelInvitation')
+                            ->url(route('team-invitations.accept', ['invitation' => $invitation->id])),
+                        Action::make('cancelInvitation')
                             ->label(trans('filament-saas-panel::messages.teams.members.notifications.cancel'))
                             ->color('danger')
-                            ->url(route('accounts.team-invitations.cancel', ['invitation' => $invitation->id])),
+                            ->url(route('team-invitations.cancel', ['invitation' => $invitation->id])),
                     ])
                     ->sendToDatabase($account);
             }
@@ -85,7 +76,7 @@ trait HasTeamInvitation
 
     protected function manageTeamInvitations(Model $record, array $data)
     {
-        $user = auth(filament()->getPlugin('filament-saas-panel')->authGuard)->user();
+        $user = auth(config('filament-saas-panel.auth_guard'))->user();
         $team = $record;
         $email = $data['email'];
         $role = $data['role'];
@@ -97,9 +88,11 @@ trait HasTeamInvitation
             'role' => $role,
         ]);
 
-        Mail::to($email)->send(new TeamInvitation($invitation));
+        $mail = config('filament-saas-panel.team_invitation_mail');
 
-        $account = config('filament-accounts.model')::where('email', $email)->first();
+        Mail::to($email)->send(new $mail($invitation));
+
+        $account = config('filament-saas-panel.user_model')::where('email', $email)->first();
 
         if ($account) {
             Notification::make()
@@ -107,12 +100,12 @@ trait HasTeamInvitation
                 ->body(trans('filament-saas-panel::messages.teams.members.notifications.body', ['team' => $team->name]))
                 ->success()
                 ->actions([
-                    \Filament\Notifications\Actions\Action::make('acceptInvitation')
+                    Action::make('acceptInvitation')
                         ->label(trans('filament-saas-panel::messages.teams.members.notifications.accept'))
                         ->color('success')
                         ->markAsRead()
                         ->url(route('accounts.team-invitations.accept', ['invitation' => $invitation->id])),
-                    \Filament\Notifications\Actions\Action::make('cancelInvitation')
+                    Action::make('cancelInvitation')
                         ->label(trans('filament-saas-panel::messages.teams.members.notifications.cancel'))
                         ->color('danger')
                         ->url(route('accounts.team-invitations.cancel', ['invitation' => $invitation->id])),

@@ -2,14 +2,14 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
 
+use Filament\Actions\Action;
 use Filament\Support\Exceptions\Halt;
-use Laravel\Jetstream\Jetstream;
 
 trait HasCancelTeamInvitation
 {
-    public function getCancelTeamInvitationAction(): \Filament\Actions\Action
+    public function getCancelTeamInvitationAction(): Action
     {
-        return \Filament\Actions\Action::make('getCancelTeamInvitationAction')
+        return Action::make('getCancelTeamInvitationAction')
             ->requiresConfirmation()
             ->color('danger')
             ->label(trans('filament-saas-panel::messages.teams.actions.cancel_invitation'))
@@ -22,7 +22,7 @@ trait HasCancelTeamInvitation
     {
         try {
             if (! empty($invitationId)) {
-                $model = Jetstream::teamInvitationModel();
+                $model = config('filament-saas-panel.team_invitation_model');
 
                 $model::whereKey($invitationId)->delete();
             }

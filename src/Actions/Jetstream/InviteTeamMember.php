@@ -3,6 +3,7 @@
 namespace TomatoPHP\FilamentSaasPanel\Actions\Jetstream;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -11,9 +12,7 @@ use Illuminate\Validation\Rule;
 use Laravel\Jetstream\Contracts\InvitesTeamMembers;
 use Laravel\Jetstream\Events\InvitingTeamMember;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Jetstream\Mail\TeamInvitation;
 use Laravel\Jetstream\Rules\Role;
-use TomatoPHP\FilamentAccounts\Models\Account;
 use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class InviteTeamMember implements InvitesTeamMembers
@@ -21,7 +20,7 @@ class InviteTeamMember implements InvitesTeamMembers
     /**
      * Invite a new team member to the given team.
      */
-    public function invite(Account $user, Team $team, string $email, ?string $role = null): void
+    public function invite(Model $user, Model $team, string $email, ?string $role = null): void
     {
         Gate::forUser($user)->authorize('addTeamMember', $team);
 
@@ -34,13 +33,15 @@ class InviteTeamMember implements InvitesTeamMembers
             'role' => $role,
         ]);
 
-        Mail::to($email)->send(new TeamInvitation($invitation));
+        $mail = config('filament-saas-panel.team_invitation_mail');
+
+        Mail::to($email)->send(new $mail($invitation));
     }
 
     /**
      * Validate the invite member operation.
      */
-    protected function validate(Team $team, string $email, ?string $role): void
+    protected function validate(Model $team, string $email, ?string $role): void
     {
         Validator::make([
             'email' => $email,
@@ -55,7 +56,7 @@ class InviteTeamMember implements InvitesTeamMembers
     /**
      * Get the validation rules for inviting a team member.
      */
-    protected function rules(Team $team): array
+    protected function rules(Model $team): array
     {
         return array_filter([
             'email' => [
@@ -73,7 +74,7 @@ class InviteTeamMember implements InvitesTeamMembers
     /**
      * Ensure that the user is not already on the team.
      */
-    protected function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): Closure
+    protected function ensureUserIsNotAlreadyOnTeam(Model $team, string $email): Closure
     {
         return function ($validator) use ($team, $email) {
             $validator->errors()->addIf(

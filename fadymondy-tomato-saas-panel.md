@@ -1,7 +1,7 @@
 ---
 name: SaaS Panel
-slug: 3x1io-tomato-saas-panel
-author_slug: 3x1io
+slug: fadymondy-tomato-saas-panel
+author_slug: fadymondy
 categories: [developer-tools]
 description: Ready to use SaaS panel with integration of Filament Accounts Builder and JetStream teams
 discord_url:
