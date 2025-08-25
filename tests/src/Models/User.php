@@ -2,24 +2,23 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Tests\Models;
 
-use Filament\Panel;
-use Spatie\MediaLibrary\HasMedia;
-use Filament\Models\Contracts\HasAvatar;
-use Illuminate\Notifications\Notifiable;
-use Filament\Models\Contracts\HasTenants;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
+use Filament\Models\Contracts\HasTenants;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use TomatoPHP\FilamentSaasPanel\Traits\InteractsWithTenant;
+use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
 use TomatoPHP\FilamentSaasPanel\Tests\Database\Factories\UserFactory;
+use TomatoPHP\FilamentSaasPanel\Traits\InteractsWithTenant;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasAvatar, HasMedia, HasTenants
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasMedia, HasTenants, MustVerifyEmail
 {
     use HasFactory;
-    use Notifiable;
     use InteractsWithTenant;
-
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -35,7 +34,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
         'type',
         'address',
         'password',
-        'profile_photo_path'
+        'profile_photo_path',
     ];
 
     /**

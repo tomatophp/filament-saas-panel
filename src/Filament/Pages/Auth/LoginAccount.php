@@ -53,7 +53,6 @@ class LoginAccount extends Login
 
         $data = $this->form->getState();
 
-
         if (! auth(config('filament-saas-panel.auth_guard'))->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
             $this->throwFailureValidationException();
         }

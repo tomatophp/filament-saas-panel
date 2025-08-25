@@ -7,7 +7,7 @@ return [
         'email' => 'Email',
         'password' => 'Password',
         'remember_me' => 'Remember me',
-        'active' => "Your account is not active, please contact the administrator.",
+        'active' => 'Your account is not active, please contact the administrator.',
     ],
     'register' => [
         'title' => 'Register',

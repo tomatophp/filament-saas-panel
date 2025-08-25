@@ -3,8 +3,8 @@
 namespace TomatoPHP\FilamentSaasPanel\Tests\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
 
 class TeamFactory extends Factory
 {
