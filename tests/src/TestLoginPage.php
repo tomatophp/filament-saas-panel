@@ -1,10 +1,9 @@
 <?php
 
 use Filament\Facades\Filament;
-use function Pest\Laravel\get;
-use Illuminate\Support\Facades\DB;
-use TomatoPHP\FilamentSaasPanel\FilamentSaasPanelPlugin;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
+
+use function Pest\Laravel\get;
 
 beforeEach(function () {
     config()->set('filament-saas-panel.user_model', \TomatoPHP\FilamentSaasPanel\Tests\Models\User::class);
