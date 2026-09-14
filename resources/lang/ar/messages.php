@@ -129,6 +129,7 @@ return [
         ],
     ],
     'team' => [
+        'group' => 'الحسابات',
         'title' => 'الفرق',
         'single' => 'فريق',
         'columns' => [
@@ -137,6 +138,9 @@ return [
             'owner' => 'المالك',
             'personal_team' => 'فريق شخصي',
         ],
+    ],
+    'contact-us' => [
+        'footer' => 'تحتاج مساعدة؟',
     ],
     'saved_successfully' => 'تم الحفظ بنجاح',
     'save' => 'حفظ',

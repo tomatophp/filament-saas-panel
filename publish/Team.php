@@ -5,6 +5,7 @@ namespace App\Models;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
@@ -23,7 +24,7 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
      * @var array<int, string>
      */
     protected $fillable = [
-        'account_id',
+        'user_id',
         'name',
         'personal_team',
     ];
@@ -56,8 +57,16 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
         return $this->getFirstMediaUrl('avatar') ?: null;
     }
 
+    /**
+     * The owner is the configured `filament-saas-panel.user_model` (your User, or an Account model).
+     */
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->belongsTo(config('filament-saas-panel.user_model'), config('filament-saas-panel.team_id_column', 'user_id'));
+    }
+
+    public function accounts(): BelongsToMany
+    {
+        return $this->belongsToMany(config('filament-saas-panel.user_model'), 'team_user', 'team_id', config('filament-saas-panel.team_id_column', 'user_id'));
     }
 }

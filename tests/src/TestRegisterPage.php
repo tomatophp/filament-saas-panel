@@ -1,13 +1,16 @@
 <?php
 
 use Filament\Facades\Filament;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccountWithoutOTP;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
 
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    config()->set('filament-saas-panel.user_model', \TomatoPHP\FilamentSaasPanel\Tests\Models\User::class);
+    config()->set('filament-saas-panel.user_model', User::class);
 
-    config()->set('filament-saas-panel.team_model', \TomatoPHP\FilamentSaasPanel\Tests\Models\Team::class);
+    config()->set('filament-saas-panel.team_model', Team::class);
 
     config()->set('filament-saas-panel.auth_guard', 'web');
 
@@ -19,7 +22,7 @@ it('can render register page', function () {
 });
 
 it('can register', function () {
-    \Pest\Livewire\livewire(\TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccountWithoutOTP::class)
+    \Pest\Livewire\livewire(RegisterAccountWithoutOTP::class)
         ->fillForm([
             'name' => 'Fady Mondy',
             'email' => 'info@3x1.io',
@@ -29,7 +32,7 @@ it('can register', function () {
         ->call('register')
         ->assertHasNoFormErrors();
 
-    \Pest\Laravel\assertDatabaseHas(\TomatoPHP\FilamentSaasPanel\Tests\Models\User::class, [
+    \Pest\Laravel\assertDatabaseHas(User::class, [
         'name' => 'Fady Mondy',
         'email' => 'info@3x1.io',
     ]);

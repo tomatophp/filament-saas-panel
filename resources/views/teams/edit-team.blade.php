@@ -80,7 +80,7 @@
                                         {{ ($this->getLeavingTeamAction())(['user'=> $user->id]) }}
 
                                     <!-- Remove Team Member -->
-                                    @elseif (auth(config('filament-saas-panel.auth_guard'))->user()->id === \Filament\Facades\Filament::getTenant()->account_id)
+                                    @elseif (auth(config('filament-saas-panel.auth_guard'))->user()->id === \Filament\Facades\Filament::getTenant()->{config('filament-saas-panel.team_id_column')})
                                         {{ ($this->getRemoveMemberAction())(['user'=> $user->id]) }}
                                     @endif
                                 </div>

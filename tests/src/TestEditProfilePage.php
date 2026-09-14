@@ -1,10 +1,13 @@
 <?php
 
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    $account = \TomatoPHP\FilamentSaasPanel\Tests\Models\User::factory()->create();
+    $account = User::factory()->create();
     $team = $account->teams()->create([
         'user_id' => $account->id,
         'name' => 'Team 1',
@@ -15,24 +18,24 @@ beforeEach(function () {
 });
 
 it('can render edit profile page', function () {
-    get(\TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::getUrl(['tenant' => auth(config('filament-saas-panel.auth_guard'))->user()->current_team_id]))->assertOk();
+    get(EditProfile::getUrl(['tenant' => auth(config('filament-saas-panel.auth_guard'))->user()->current_team_id]))->assertOk();
 });
 
 it('can edit profile details', function () {
-    \Pest\Livewire\livewire(\TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::class)
+    \Pest\Livewire\livewire(EditProfile::class)
         ->fillForm([
             'name' => 'John Doe',
         ], 'editProfileForm')
         ->call('updateProfile');
 
-    \Pest\Laravel\assertDatabaseHas(\TomatoPHP\FilamentSaasPanel\Tests\Models\User::class, [
+    \Pest\Laravel\assertDatabaseHas(User::class, [
         'id' => auth(config('filament-saas-panel.auth_guard'))->user()->id,
         'name' => 'John Doe',
     ]);
 });
 
 it('can edit profile password', function () {
-    \Pest\Livewire\livewire(\TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::class)
+    \Pest\Livewire\livewire(EditProfile::class)
         ->fillForm([
             'current_password' => 'password',
             'password' => 'password123',

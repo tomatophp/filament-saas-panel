@@ -2,10 +2,10 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Actions\Fortify;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
-use TomatoPHP\FilamentAccounts\Models\Account;
 
 class ResetUserPassword implements ResetsUserPasswords
 {
@@ -16,7 +16,7 @@ class ResetUserPassword implements ResetsUserPasswords
      *
      * @param  array<string, string>  $input
      */
-    public function reset(Account $user, array $input): void
+    public function reset(Model $user, array $input): void
     {
         Validator::make($input, [
             'password' => $this->passwordRules(),

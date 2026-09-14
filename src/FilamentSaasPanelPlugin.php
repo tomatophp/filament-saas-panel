@@ -169,7 +169,8 @@ class FilamentSaasPanelPlugin implements Plugin
                 ->tenant(config('filament-saas-panel.team_model'), $this->teamSlug)
                 ->tenantRegistration(config('filament-saas-panel.pages.teams.create'));
 
-            $pages[] = config('filament-saas-panel.pages.teams.create');
+            // The create team page is only the tenant registration page (`/{panel}/new`). Registering it
+            // as a regular page as well added a broken `/{panel}/{tenant}/new` route.
         }
 
         $menuItems = [];

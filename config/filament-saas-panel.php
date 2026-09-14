@@ -1,5 +1,16 @@
 <?php
 
+use App\Models\Membership;
+use App\Models\Team;
+use App\Models\TeamInvitation;
+use App\Models\User;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\LoginAccount;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccount;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccountWithoutOTP;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\CreateTeam;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile;
+use TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
+
 return [
     /**
      * --------------------------------------------------------------
@@ -19,16 +30,16 @@ return [
      */
     'pages' => [
         'teams' => [
-            'create' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\CreateTeam::class,
-            'edit' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam::class,
+            'create' => CreateTeam::class,
+            'edit' => EditTeam::class,
         ],
         'profile' => [
-            'edit' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\EditProfile::class,
+            'edit' => EditProfile::class,
         ],
         'auth' => [
-            'login' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\LoginAccount::class,
-            'register' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccount::class,
-            'register-without-otp' => \TomatoPHP\FilamentSaasPanel\Filament\Pages\Auth\RegisterAccountWithoutOTP::class,
+            'login' => LoginAccount::class,
+            'register' => RegisterAccount::class,
+            'register-without-otp' => RegisterAccountWithoutOTP::class,
         ],
     ],
 
@@ -48,7 +59,7 @@ return [
      *
      * This is the model that will be used to interact with the user.
      */
-    'user_model' => \App\Models\User::class,
+    'user_model' => User::class,
 
     /**
      * --------------------------------------------------------------
@@ -66,7 +77,7 @@ return [
      *
      * This is the model that will be used to interact with the team.
      */
-    'team_model' => \App\Models\Team::class,
+    'team_model' => Team::class,
 
     /**
      * --------------------------------------------------------------
@@ -84,7 +95,7 @@ return [
      *
      * This is the model that will be used to interact with the team invitation.
      */
-    'team_invitation_model' => \App\Models\TeamInvitation::class,
+    'team_invitation_model' => TeamInvitation::class,
 
     /**
      * --------------------------------------------------------------
@@ -93,7 +104,7 @@ return [
      *
      * This is the model that will be used to interact with the membership.
      */
-    'membership_model' => \App\Models\Membership::class,
+    'membership_model' => Membership::class,
 
     /**
      * --------------------------------------------------------------
@@ -120,7 +131,7 @@ return [
      *
      * This is the mail that will be used to send the team invitation.
      */
-    'team_invitation_mail' => \TomatoPHP\FilamentSaasPanel\Mail\TeamInvitation::class,
+    'team_invitation_mail' => TomatoPHP\FilamentSaasPanel\Mail\TeamInvitation::class,
 
     /**
      * --------------------------------------------------------------

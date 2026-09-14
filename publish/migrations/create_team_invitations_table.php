@@ -7,10 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations. Skipped when the table already exists (for example from `jetstream:install`).
      */
     public function up(): void
     {
+        if (Schema::hasTable('team_invitations')) {
+            return;
+        }
+
         Schema::create('team_invitations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('team_id')->constrained()->cascadeOnDelete();

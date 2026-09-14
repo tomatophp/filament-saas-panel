@@ -7,6 +7,7 @@ use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Component;
 
 class DeleteAccountForm
 {
@@ -35,22 +36,34 @@ class DeleteAccountForm
                                 ->label(trans('filament-saas-panel::messages.profile.delete.password'))
                                 ->required(),
                         ])
-                        ->action(function (array $data) {
-
-                            if (! Hash::check($data['password'], auth('accounts')->user()->password)) {
-                                self::sendErrorDeleteAccount(trans('filament-saas-panel::messages.profile.delete.incorrect_password'));
-
-                                return;
-                            }
-
-                            auth('accounts')->user()?->update([
-                                'is_active' => false,
-                            ]);
-
-                            auth('accounts')->user()?->delete();
-                        }),
+                        ->action(fn (array $data, Component $livewire) => static::deleteAccount($data, $livewire)),
                 ]),
         ];
+    }
+
+    /**
+     * Delete the signed-in user on the panel's auth guard after checking the password.
+     */
+    public static function deleteAccount(array $data, ?Component $livewire = null): bool
+    {
+        $guard = auth(config('filament-saas-panel.auth_guard'));
+        $user = $guard->user();
+
+        if (! $user || ! Hash::check($data['password'] ?? '', $user->password)) {
+            self::sendErrorDeleteAccount(trans('filament-saas-panel::messages.profile.delete.incorrect_password'));
+
+            return false;
+        }
+
+        // Log out before deleting: logging out cycles the remember token and saves the user,
+        // which would insert the deleted row again.
+        $guard->logout();
+
+        $user->delete();
+
+        $livewire?->redirect(filament()->getLoginUrl() ?? url('/'));
+
+        return true;
     }
 
     public static function sendErrorDeleteAccount(string $message): void

@@ -11,6 +11,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
+use TomatoPHP\FilamentSaasPanel\Console\FilamentSaasPanelInstall;
 use TomatoPHP\FilamentSaasPanel\Listeners\CreatePersonalTeam;
 use TomatoPHP\FilamentSaasPanel\Listeners\SwitchTeam;
 use TomatoPHP\FilamentSaasPanel\Livewire\Otp;
@@ -22,7 +23,7 @@ class FilamentSaasPanelServiceProvider extends ServiceProvider
     {
         // Register generate command
         $this->commands([
-            \TomatoPHP\FilamentSaasPanel\Console\FilamentSaasPanelInstall::class,
+            FilamentSaasPanelInstall::class,
         ]);
 
         // Register Config file

@@ -24,6 +24,7 @@ class Team extends JetstreamTeam implements HasAvatar, HasMedia
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'account_id',
         'name',
         'personal_team',

@@ -44,6 +44,8 @@ class EditTeam extends EditTenantProfile
 
     public function mount(): void
     {
+        $this->tenant = Filament::getTenant();
+
         $this->fillForms();
     }
 

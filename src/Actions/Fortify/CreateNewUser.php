@@ -2,40 +2,40 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Actions\Fortify;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
-use TomatoPHP\FilamentAccounts\Models\Account;
-use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
     /**
-     * Create a newly registered user.
+     * Create a newly registered user of the configured `filament-saas-panel.user_model`.
      *
      * @param  array<string, string>  $input
      */
-    public function create(array $input): Account
+    public function create(array $input): Model
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:accounts'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(config('filament-saas-panel.user_table', 'users'))],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return DB::transaction(function () use ($input) {
-            return tap(Account::query()->create([
+        $userModel = config('filament-saas-panel.user_model');
+
+        return DB::transaction(function () use ($input, $userModel): Model {
+            return tap($userModel::query()->create([
                 'name' => $input['name'],
                 'email' => $input['email'],
-                'loginBy' => 'email',
-                'type' => 'account',
                 'password' => Hash::make($input['password']),
-            ]), function (Account $user) {
+            ]), function (Model $user): void {
                 $this->createTeam($user);
             });
         });
@@ -44,12 +44,11 @@ class CreateNewUser implements CreatesNewUsers
     /**
      * Create a personal team for the user.
      */
-    protected function createTeam(Account $user): void
+    protected function createTeam(Model $user): void
     {
-        $user->ownedTeams()->save(Team::forceCreate([
-            'account_id' => $user->id,
+        $user->ownedTeams()->create([
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
-        ]));
+        ]);
     }
 }

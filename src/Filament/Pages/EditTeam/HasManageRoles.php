@@ -2,6 +2,7 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
 
+use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Support\Exceptions\Halt;
@@ -13,7 +14,7 @@ trait HasManageRoles
 {
     public function getManageRoleAction($role = null)
     {
-        return \Filament\Actions\Action::make('getManageRoleAction')
+        return Action::make('getManageRoleAction')
             ->requiresConfirmation()
             ->link()
             ->color('info')

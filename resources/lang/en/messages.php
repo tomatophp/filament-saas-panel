@@ -145,6 +145,7 @@ return [
         ],
     ],
     'team' => [
+        'group' => 'Accounts',
         'title' => 'Teams',
         'single' => 'Team',
         'columns' => [
@@ -153,6 +154,9 @@ return [
             'owner' => 'Owner',
             'personal_team' => 'Personal Team',
         ],
+    ],
+    'contact-us' => [
+        'footer' => 'Need help?',
     ],
     'saved_successfully' => 'Saved Successfully',
     'save' => 'Save',

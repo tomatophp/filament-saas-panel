@@ -3,10 +3,10 @@
 namespace TomatoPHP\FilamentSaasPanel\Actions\Fortify;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
-use TomatoPHP\FilamentAccounts\Models\Account;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
@@ -15,12 +15,14 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param  array<string, mixed>  $input
      */
-    public function update(Account $user, array $input): void
+    public function update(Model $user, array $input): void
     {
+        $table = config('filament-saas-panel.user_table', 'users');
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('accounts')->ignore($user->id)],
-            'phone' => ['required',  'max:255', Rule::unique('accounts')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique($table)->ignore($user->getKey())],
+            'phone' => ['nullable', 'max:255', Rule::unique($table)->ignore($user->getKey())],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 
@@ -28,31 +30,23 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
-            $this->updateVerifiedUser($user, $input);
-        } else {
-            $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'phone' => $input['phone'],
-            ])->save();
-        }
-    }
-
-    /**
-     * Update the given verified user's profile information.
-     *
-     * @param  array<string, string>  $input
-     */
-    protected function updateVerifiedUser(Account $user, array $input): void
-    {
-        $user->forceFill([
+        $attributes = [
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone' => $input['phone'],
-        ])->save();
+        ];
 
-        $user->sendEmailVerificationNotification();
+        if (array_key_exists('phone', $input)) {
+            $attributes['phone'] = $input['phone'];
+        }
+
+        if ($input['email'] !== $user->email && $user instanceof MustVerifyEmail) {
+            $user->forceFill([...$attributes, 'email_verified_at' => null])->save();
+
+            $user->sendEmailVerificationNotification();
+
+            return;
+        }
+
+        $user->forceFill($attributes)->save();
     }
 }

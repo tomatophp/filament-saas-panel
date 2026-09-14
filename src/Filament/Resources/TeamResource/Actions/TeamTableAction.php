@@ -2,9 +2,9 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource\Actions;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\Action;
 
 class TeamTableAction
 {
@@ -18,7 +18,7 @@ class TeamTableAction
             ->fillForm(fn ($record) => [
                 'teams' => $record->teams->pluck('id')->toArray(),
             ])
-            ->form([
+            ->schema([
                 Select::make('teams')
                     ->columnSpanFull()
                     ->multiple()

@@ -2,10 +2,10 @@
 
 namespace TomatoPHP\FilamentSaasPanel\Actions\Fortify;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\UpdatesUserPasswords;
-use TomatoPHP\FilamentAccounts\Models\Account;
 
 class UpdateUserPassword implements UpdatesUserPasswords
 {
@@ -16,10 +16,12 @@ class UpdateUserPassword implements UpdatesUserPasswords
      *
      * @param  array<string, string>  $input
      */
-    public function update(Account $user, array $input): void
+    public function update(Model $user, array $input): void
     {
+        $guard = config('filament-saas-panel.auth_guard', 'web');
+
         Validator::make($input, [
-            'current_password' => ['required', 'string', 'current_password:web'],
+            'current_password' => ['required', 'string', "current_password:{$guard}"],
             'password' => $this->passwordRules(),
         ], [
             'current_password.current_password' => __('The provided password does not match your current password.'),

@@ -1,0 +1,10 @@
+parameters:
+    level: 0
+    paths:
+        - src
+    # pest-plugin-type-coverage registers 100% type-coverage rules through phpstan/extension-installer.
+    # Type coverage is reported with `vendor/bin/pest --type-coverage`; it is not a gate for this package yet.
+    type_coverage:
+        return_type: 0
+        param_type: 0
+        property_type: 0

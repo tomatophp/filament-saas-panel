@@ -15,7 +15,7 @@ class TeamInvitation extends Mailable
     /**
      * The team invitation instance.
      *
-     * @var \Laravel\Jetstream\TeamInvitation
+     * @var TeamInvitationModel
      */
     public $invitation;
 

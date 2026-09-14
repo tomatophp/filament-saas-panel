@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource\Pages\ListTeams;
 use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class TeamResource extends Resource
@@ -24,46 +25,47 @@ class TeamResource extends Resource
 
     public static function getLabel(): ?string
     {
-        return trans('filament-accounts::messages.team.single');
+        return trans('filament-saas-panel::messages.team.single');
     }
 
     public static function getNavigationLabel(): string
     {
-        return trans('filament-accounts::messages.team.title');
+        return trans('filament-saas-panel::messages.team.title');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return trans('filament-accounts::messages.team.title');
+        return trans('filament-saas-panel::messages.team.title');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return trans('filament-accounts::messages.group');
+        return trans('filament-saas-panel::messages.team.group');
     }
 
-    public static function form(Schema $form): Schema
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Forms\Components\SpatieMediaLibraryFileUpload::make('avatar')
-                    ->label(trans('filament-accounts::messages.team.columns.avatar'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.avatar'))
                     ->hiddenLabel()
                     ->alignCenter()
                     ->avatar()
                     ->collection('avatar')
+                    ->visibility('public')
                     ->image(),
                 Forms\Components\TextInput::make('name')
-                    ->label(trans('filament-accounts::messages.team.columns.name'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.name'))
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('account_id')
-                    ->label(trans('filament-accounts::messages.team.columns.owner'))
+                Forms\Components\Select::make(config('filament-saas-panel.team_id_column', 'user_id'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.owner'))
                     ->relationship('owner', 'name')
                     ->preload()
                     ->searchable(),
                 Forms\Components\Toggle::make('personal_team')
-                    ->label(trans('filament-accounts::messages.team.columns.personal_team')),
+                    ->label(trans('filament-saas-panel::messages.team.columns.personal_team')),
             ])->columns(1);
     }
 
@@ -72,18 +74,19 @@ class TeamResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('owner.name')
-                    ->label(trans('filament-accounts::messages.team.columns.owner'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.owner'))
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('avatar')
                     ->circular()
-                    ->label(trans('filament-accounts::messages.team.columns.avatar'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.avatar'))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label(trans('filament-accounts::messages.team.columns.name'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('personal_team')
-                    ->label(trans('filament-accounts::messages.team.columns.personal_team'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.personal_team'))
+                    ->boolean()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -96,7 +99,7 @@ class TeamResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('owner')
-                    ->label(trans('filament-accounts::messages.team.columns.owner'))
+                    ->label(trans('filament-saas-panel::messages.team.columns.owner'))
                     ->searchable()
                     ->relationship('owner', 'name'),
             ])
@@ -114,15 +117,13 @@ class TeamResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => \TomatoPHP\FilamentSaasPanel\Filament\Resources\TeamResource\Pages\ListTeams::route('/'),
+            'index' => ListTeams::route('/'),
         ];
     }
 }

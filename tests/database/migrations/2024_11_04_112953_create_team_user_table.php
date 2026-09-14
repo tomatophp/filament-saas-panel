@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('role')->nullable();
             $table->timestamps();
 
-            $table->unique(['team_id', 'account_id']);
+            $table->unique(['team_id', 'user_id']);
         });
 
         Schema::table('users', function (Blueprint $table) {

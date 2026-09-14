@@ -3,19 +3,18 @@
 namespace TomatoPHP\FilamentSaasPanel\Actions\Jetstream;
 
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use Laravel\Jetstream\Contracts\RemovesTeamMembers;
 use Laravel\Jetstream\Events\TeamMemberRemoved;
-use TomatoPHP\FilamentAccounts\Models\Account;
-use TomatoPHP\FilamentSaasPanel\Models\Team;
 
 class RemoveTeamMember implements RemovesTeamMembers
 {
     /**
      * Remove the team member from the given team.
      */
-    public function remove(Account $user, Team $team, Account $teamMember): void
+    public function remove(Model $user, Model $team, Model $teamMember): void
     {
         $this->authorize($user, $team, $teamMember);
 
@@ -29,10 +28,10 @@ class RemoveTeamMember implements RemovesTeamMembers
     /**
      * Authorize that the user can remove the team member.
      */
-    protected function authorize(Account $user, Team $team, Account $teamMember): void
+    protected function authorize(Model $user, Model $team, Model $teamMember): void
     {
         if (! Gate::forUser($user)->check('removeTeamMember', $team) &&
-            $user->id !== $teamMember->id) {
+            $user->getKey() !== $teamMember->getKey()) {
             throw new AuthorizationException;
         }
     }
@@ -40,9 +39,9 @@ class RemoveTeamMember implements RemovesTeamMembers
     /**
      * Ensure that the currently authenticated user does not own the team.
      */
-    protected function ensureUserDoesNotOwnTeam(Account $teamMember, Team $team): void
+    protected function ensureUserDoesNotOwnTeam(Model $teamMember, Model $team): void
     {
-        if ($teamMember->id === $team->owner->id) {
+        if ($teamMember->getKey() === $team->owner?->getKey()) {
             throw ValidationException::withMessages([
                 'team' => [__('You may not leave a team that you created.')],
             ])->errorBag('removeTeamMember');

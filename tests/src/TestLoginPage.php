@@ -2,13 +2,14 @@
 
 use Filament\Facades\Filament;
 use TomatoPHP\FilamentSaasPanel\Tests\Models\Team;
+use TomatoPHP\FilamentSaasPanel\Tests\Models\User;
 
 use function Pest\Laravel\get;
 
 beforeEach(function () {
-    config()->set('filament-saas-panel.user_model', \TomatoPHP\FilamentSaasPanel\Tests\Models\User::class);
+    config()->set('filament-saas-panel.user_model', User::class);
 
-    config()->set('filament-saas-panel.team_model', \TomatoPHP\FilamentSaasPanel\Tests\Models\Team::class);
+    config()->set('filament-saas-panel.team_model', Team::class);
 
     config()->set('filament-saas-panel.auth_guard', 'web');
 
