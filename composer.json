@@ -2,6 +2,12 @@
     "name": "tomatophp/filament-saas-panel",
     "type": "library",
     "description": "Ready to use SaaS panel with integration of Filament Accounts Builder and JetStream teams",
+    "homepage": "https://tomatophp.com/en/plugins/filament-saas-panel",
+    "support": {
+        "issues": "https://github.com/tomatophp/filament-saas-panel/issues",
+        "source": "https://github.com/tomatophp/filament-saas-panel",
+        "docs": "https://tomatophp.com/en/plugins/filament-saas-panel"
+    },
     "keywords": [
         "php",
         "laravel",
