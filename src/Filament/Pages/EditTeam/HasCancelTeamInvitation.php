@@ -3,7 +3,9 @@
 namespace TomatoPHP\FilamentSaasPanel\Filament\Pages\EditTeam;
 
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Support\Exceptions\Halt;
+use TomatoPHP\FilamentSaasPanel\Support\InvitationAccess;
 
 trait HasCancelTeamInvitation
 {
@@ -24,7 +26,13 @@ trait HasCancelTeamInvitation
             if (! empty($invitationId)) {
                 $model = config('filament-saas-panel.team_invitation_model');
 
-                $model::whereKey($invitationId)->delete();
+                $invitation = $model::whereKey($invitationId)
+                    ->where('team_id', Filament::getTenant()?->getKey())
+                    ->firstOrFail();
+
+                abort_unless(InvitationAccess::canManage(auth(config('filament-saas-panel.auth_guard'))->user(), $invitation), 403);
+
+                $invitation->delete();
             }
         } catch (Halt $exception) {
             return;

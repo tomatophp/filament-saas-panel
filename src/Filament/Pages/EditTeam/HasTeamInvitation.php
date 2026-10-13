@@ -8,6 +8,7 @@ use Filament\Notifications\Notification;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Laravel\Jetstream\Events\InvitingTeamMember;
 use Laravel\Jetstream\Jetstream;
 
@@ -29,7 +30,9 @@ trait HasTeamInvitation
         try {
             $model = Jetstream::teamInvitationModel();
 
-            $invitation = $model::whereKey($invitationId)->first();
+            $invitation = $model::whereKey($invitationId)
+                ->where('team_id', Filament::getTenant()?->getKey())
+                ->firstOrFail();
 
             $mail = config('filament-saas-panel.team_invitation_mail');
 
@@ -47,11 +50,11 @@ trait HasTeamInvitation
                             ->label(trans('filament-saas-panel::messages.teams.members.notifications.accept'))
                             ->color('success')
                             ->markAsRead()
-                            ->url(route('team-invitations.accept', ['invitation' => $invitation->id])),
+                            ->url(URL::signedRoute('team-invitations.accept', ['invitation' => $invitation->id])),
                         Action::make('cancelInvitation')
                             ->label(trans('filament-saas-panel::messages.teams.members.notifications.cancel'))
                             ->color('danger')
-                            ->url(route('team-invitations.cancel', ['invitation' => $invitation->id])),
+                            ->url(URL::signedRoute('team-invitations.cancel', ['invitation' => $invitation->id])),
                     ])
                     ->sendToDatabase($account);
             }
@@ -104,11 +107,11 @@ trait HasTeamInvitation
                         ->label(trans('filament-saas-panel::messages.teams.members.notifications.accept'))
                         ->color('success')
                         ->markAsRead()
-                        ->url(route('accounts.team-invitations.accept', ['invitation' => $invitation->id])),
+                        ->url(URL::signedRoute('team-invitations.accept', ['invitation' => $invitation->id])),
                     Action::make('cancelInvitation')
                         ->label(trans('filament-saas-panel::messages.teams.members.notifications.cancel'))
                         ->color('danger')
-                        ->url(route('accounts.team-invitations.cancel', ['invitation' => $invitation->id])),
+                        ->url(URL::signedRoute('team-invitations.cancel', ['invitation' => $invitation->id])),
                 ])
                 ->sendToDatabase($account);
         }

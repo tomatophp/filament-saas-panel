@@ -137,6 +137,16 @@ on your admin panel provider if you like to have Team resource and features regi
 )
 ```
 
+## Team Invitation Links
+
+Invitation links (`team-invitations.accept` and `team-invitations.cancel`) are signed URLs. Opening the link only shows a confirmation page; accepting or cancelling is a `POST` to the same signed URL.
+
+- Only the invited user (the logged in user's email matches the invitation email, case-insensitive) can accept an invitation.
+- Only the invited user, the team owner, a team admin or a user allowed by the `removeTeamMember` policy ability can cancel an invitation.
+- Anyone else gets a `403`.
+
+**Upgrade note:** unsigned links (for example old `/users/team-invitations/{id}/accept` links stored in database notifications) no longer work and return `403`. Ask the team admin to resend the invitation from the team page. If you link to these routes from your own code, generate the URL with `URL::signedRoute('team-invitations.accept', ['invitation' => $invitation->id])`.
+
 ## Use On Existing User Model
 
 if you have `User.php` published on your `/app/Models` folder and you don't need to publish it again just add this trait to your model
