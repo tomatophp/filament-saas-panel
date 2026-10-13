@@ -53,6 +53,16 @@ Ready to use SaaS panel for your customers with Jetstream teams: registration wi
 | 5.x | 5.x | 12.x / 13.x | 8.3+ |
 | 4.x | 4.x | 11.x / 12.x | 8.2+ |
 
+## Team Invitation Links
+
+Invitation links (`team-invitations.accept` and `team-invitations.cancel`) are signed URLs. Opening the link only shows a confirmation page; accepting or cancelling is a `POST` to the same signed URL.
+
+- Only the invited user (the logged in user's email matches the invitation email, case-insensitive) can accept an invitation.
+- Only the invited user, the team owner, a team admin or a user allowed by the `removeTeamMember` policy ability can cancel an invitation.
+- Anyone else gets a `403`.
+
+**Upgrade note:** unsigned links (for example old `/users/team-invitations/{id}/accept` links stored in database notifications) no longer work and return `403`. Ask the team admin to resend the invitation from the team page. If you link to these routes from your own code, generate the URL with `URL::signedRoute('team-invitations.accept', ['invitation' => $invitation->id])`.
+
 ## Requirements
 
 The SaaS panel is built on [Laravel Jetstream](https://jetstream.laravel.com) teams and [Laravel Sanctum](https://laravel.com/docs/sanctum). Both are installed with the package; you do **not** need to run `php artisan jetstream:install`.
